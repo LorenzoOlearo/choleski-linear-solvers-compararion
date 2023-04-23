@@ -1,1 +1,4 @@
 .vscode
+
+java/cholesky-linear-solver/.idea
+java/cholesky-linear-solver/target
