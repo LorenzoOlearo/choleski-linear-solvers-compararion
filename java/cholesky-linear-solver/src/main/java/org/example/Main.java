@@ -13,7 +13,7 @@ public class Main {
         DMatrixRMaj B = Utils.computeB(A);
         DMatrixRMaj X = SystemSolver.CholeskySolve(A, B);
 
-        X.print();
+        System.out.println(Utils.computeError(X, Utils.computeXe(A)));
 
     }
 }
