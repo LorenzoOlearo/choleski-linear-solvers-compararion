@@ -25,12 +25,8 @@ def sparse_matrix_solver(A, b):
     return x
 
 
-def load_sparse_matrix(config):
-    print('matrices folder: ' + config['matrices_path'])
-    print(os.listdir(os.path.join(config['matrices_path'])))
-    
-    # Load the first sample .mat matrix 
-    mat = sio.loadmat(os.path.join(config['matrices_path'], 'apache2.mat'), struct_as_record=False)
+def load_sparse_matrix(config, filename):
+    mat = sio.loadmat(os.path.join(config['matrices_path'], filename), struct_as_record=False)
     sparse_mat = mat['Problem'][0][0].A
     
     return sparse_mat 
@@ -55,21 +51,39 @@ def main():
         writer = csv.writer(file)
         writer.writerow(["A", "Size", "NNZ", "Time", "MEM", "RelErr", "host", "platform"])
         
-        A = load_sparse_matrix(config) 
-       
-        # TEMPORARY: will be later replaced the proper b vector 
-        b = np.ones(A.shape[0])
-        
-        start = time.time()   
-        x = sparse_matrix_solver(A, b)
+        # For each matrix in the folder, apply the Cholesky decomposition and solve the linear system
+        start = time.time()
+        print('Matrix path: ' + config['matrices_path'])
+        print('Available matrices:' + str(os.listdir(config['matrices_path'])))
+        print('Starting computation...')
+        for filename in os.listdir(config['matrices_path']):
+            if filename.endswith(".mat"):
+                print('Computing ' + filename)
+                sparse_mat = load_sparse_matrix(config, filename)
+
+                # TEMPORARY: will be later replaced the proper b vector
+                b = np.ones(sparse_mat.shape[0])
+
+                start_iter = time.time()
+                x = sparse_matrix_solver(sparse_mat, b)
+                end_iter = time.time()
+                elapsed_iter = round(end_iter - start_iter, 3)
+
+                mem_usage = memory_usage(-1, interval=.2, timeout=1, backend="psutil")
+                mem_usage = round(np.mean(mem_usage), 2)
+
+                writer.writerow([filename,
+                                 sparse_mat.shape[0],
+                                 sparse_mat.nnz,
+                                 elapsed_iter,
+                                 mem_usage,
+                                 0,
+                                 config['host'],
+                                 config['platform']])
         end = time.time()
         elapsed = round(end - start, 3)
-       
-        mem_usage = memory_usage(-1, interval=.2, timeout=1, backend="psutil")
-        mem_usage = round(np.mean(mem_usage), 2)
+        print('Total time: ' + str(elapsed) + ' seconds')
         
-        writer.writerow(['ex15', A.shape[0], A.nnz, elapsed, mem_usage, 0, config['host'], config['platform']]) 
-    
     
     
 if __name__ == '__main__':
