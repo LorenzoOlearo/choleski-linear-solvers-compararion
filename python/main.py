@@ -11,27 +11,31 @@ from os.path import dirname, join as pjoin
 from sksparse.cholmod import cholesky
 from memory_profiler import profile
 from memory_profiler import memory_usage
+from platform import python_version
+from scipy import __version__ as scipy_version
 
 
 @profile 
 def sparse_matrix_solver(A, b):
-    try: 
+    try:
+        start = time.time()
         factor = cholesky(A)
+        end = time.time()
+        elapsed = round(end - start, 3)
         x = factor(b)
     except Exception as e:
-        print('Cholesky decomposition not supported: ' + str(e))
-        x = np.zeros(A.shape[0]) 
+        print('Cholesky decomposition failed:' + str(e))
+        x = np.zeros(A.shape[0])
+        elapsed = -1
     
-    return x
+    return [x, elapsed]
 
 
 def load_sparse_matrix(config, filename):
     mat = sio.loadmat(os.path.join(config['matrices_path'], filename), struct_as_record=False)
     sparse_mat = mat['Problem'][0][0].A
-    
+
     return sparse_mat 
-    
-    
 
 
 def main():
@@ -46,43 +50,66 @@ def main():
         config = json.load(f)
         
     # Create report file     
-    report_path = os.path.join(working_dir, 'report-' + config['host'] + '-' +config['platform'] + '.csv')
+    report_path = os.path.join(working_dir, 'report-' + config['host'] + '-' + config['platform'] + '-Python' + '.csv')
     with open(report_path, 'w+') as file:
         writer = csv.writer(file)
-        writer.writerow(["A", "Size", "NNZ", "Time", "MEM", "RelErr", "host", "platform"])
+        writer.writerow(["A",
+                         "size",
+                         "NNZ",
+                         "time",
+                         "memory_usage",
+                         "relative_error",
+                         "host",
+                         "platform",
+                         "runtime_version",
+                         "library",
+                         "library_version"])
         
         # For each matrix in the folder, apply the Cholesky decomposition and solve the linear system
-        start = time.time()
+        start_total = time.time()
         print('Matrix path: ' + config['matrices_path'])
         print('Available matrices:' + str(os.listdir(config['matrices_path'])))
         print('Starting computation...')
+        
         for filename in os.listdir(config['matrices_path']):
             if filename.endswith(".mat"):
+                
                 print('Computing ' + filename)
                 sparse_mat = load_sparse_matrix(config, filename)
 
                 # TEMPORARY: will be later replaced the proper b vector
                 b = np.ones(sparse_mat.shape[0])
 
-                start_iter = time.time()
-                x = sparse_matrix_solver(sparse_mat, b)
-                end_iter = time.time()
-                elapsed_iter = round(end_iter - start_iter, 3)
+                # Solve the linear system
+                x, elapsed = sparse_matrix_solver(sparse_mat, b)
 
                 mem_usage = memory_usage(-1, interval=.2, timeout=1, backend="psutil")
                 mem_usage = round(np.mean(mem_usage), 2)
 
+                # Computes the relative error
+                # TODO: should we round the error?
+                rel_err = np.linalg.norm(sparse_mat.dot(x) - b) / np.linalg.norm(b)
+                
                 writer.writerow([filename,
                                  sparse_mat.shape[0],
                                  sparse_mat.nnz,
-                                 elapsed_iter,
+                                 elapsed,
                                  mem_usage,
-                                 0,
+                                 rel_err,
                                  config['host'],
-                                 config['platform']])
-        end = time.time()
-        elapsed = round(end - start, 3)
-        print('Total time: ' + str(elapsed) + ' seconds')
+                                 config['platform'],
+                                 python_version(),
+                                 "scipy",
+                                 scipy_version])
+                
+                
+        end_total = time.time()
+        elapsed_total = round(end_total - start_total, 3)
+        print('Total time: ' + str(elapsed_total) + ' seconds')
+        
+    
+    report_df = pd.read_csv(report_path, sep=',')
+    print(report_df)
         
     
     
