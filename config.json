@@ -1,3 +1,17 @@
 {
-    "matrices_path": "/home/lollo/Documents/matrices/"
+    "matrices_path": "PATH_TO_MATRICES_DIR",
+    "output": "PATH_TO_OUTPUT_DIR",
+    "platform": "OS_NAME",
+    "host": "HOST_NAME",
+    "matrices" : [
+        "Flan_1565.mat",
+        "StocF-1465.mat",
+        "cfd1.mat",
+        "cfd2.mat",
+        "apache2.mat",
+        "G3_circuit.mat",
+        "parabolic_fem.mat",
+        "shallow_water1.mat",
+        "ex15.mat"
+    ]
 }
