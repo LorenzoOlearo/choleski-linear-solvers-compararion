@@ -9,7 +9,10 @@ import us.hebi.matlab.mat.ejml.Mat5Ejml;
 import us.hebi.matlab.mat.format.Mat5;
 import us.hebi.matlab.mat.types.Sparse;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Utils {
 
@@ -42,6 +45,38 @@ public class Utils {
             Xe.set(i, 0, 1.0D);
         }
         return Xe;
+    }
+
+    public static void writeProfilesToCSV(ArrayList<Profile> profiles, String filename) throws IOException {
+        writeProfilesToCSV(profiles, filename, false);
+    }
+
+    public static void writeProfilesToCSV(ArrayList<Profile> profiles, String filename, Boolean append) throws IOException {
+
+        StringBuilder string = new StringBuilder();
+
+        File f = new File(filename);
+        if(!f.exists() || !append)
+            string.append("A,Size,NNZ,Time,MEM,RelErr,host,platform\n");
+
+        for(Profile profile : profiles) {
+            string.append(profile.getName()).append(",")
+                    .append(profile.getSize()).append(",")
+                    .append(profile.getNumOfNonZero()).append(",")
+                    .append(profile.getRuntime() / 1E9D).append(",")
+                    .append(profile.getMemoryUsage()).append(",")
+                    .append(profile.getRelativeError()).append(",")
+                    .append(profile.getHost()).append(",")
+                    .append(profile.getPlatform()).append("\n");
+        }
+
+        try (FileWriter writer = new FileWriter(f, append)) {
+            writer.write(string.toString());
+        } catch (IOException e) {
+            throw e;
+        }
+
+
     }
 
 }

@@ -38,9 +38,11 @@ public class Main {
             DMatrixSparseCSC A = Utils.loadMatrix(configuration.getMatrices_path() + mat + ".mat");
             DMatrixRMaj B = Utils.computeB(A);
             Profile p = profile(A,B);
-            p.setName(mat);
+            p.setName(mat + ".mat");
             profiles.add(p);
         }
+
+        Utils.writeProfilesToCSV(profiles, "report-" + configuration.getHost() + "-" + configuration.getPlatform() + ".csv");
 
     }
 
