@@ -9,7 +9,34 @@ public class Profile {
     private String platform;
     private String host;
     private String name;
+    private String runtimeVersion;
+    private String library;
+    private String libraryVersion;
 
+    public Profile() {
+    	runtimeVersion = Runtime.version().toString();
+    	library = org.ejml.All.class.getPackage().getName();
+    	//libraryVersion = org.ejml.All.class.getPackage().getImplementationVersion();
+    	libraryVersion = "0.43";
+    }
+    
+    @Override
+    public String toString() {
+    	StringBuilder string  = new StringBuilder();
+    	string.append(getName()).append(",")
+	        .append(getSize()).append(",")
+	        .append(getNumOfNonZero()).append(",")
+	        .append(getRuntime() / 1E9D).append(",")
+	        .append(getMemoryUsage() / 1E6D).append(",")
+	        .append(getRelativeError()).append(",")
+	        .append(getHost()).append(",")
+	        .append(getPlatform()).append(",")
+	        .append(getRuntimeVersion()).append(",")
+	        .append(getLibrary()).append(",")
+	        .append(getLibraryVersion());
+    	return string.toString();
+    }
+    
     public String getName() {
         return name;
     }
@@ -73,4 +100,29 @@ public class Profile {
     public void setHost(String host) {
         this.host = host;
     }
+
+	public String getLibrary() {
+		return library;
+	}
+
+	public void setLibrary(String library) {
+		this.library = library;
+	}
+
+	public String getRuntimeVersion() {
+		return runtimeVersion;
+	}
+
+	public void setRuntimeVersion(String runtimeVersion) {
+		this.runtimeVersion = runtimeVersion;
+	}
+
+	public String getLibraryVersion() {
+		return libraryVersion;
+	}
+
+	public void setLibraryVersion(String libraryVersion) {
+		this.libraryVersion = libraryVersion;
+	}
+	
 }

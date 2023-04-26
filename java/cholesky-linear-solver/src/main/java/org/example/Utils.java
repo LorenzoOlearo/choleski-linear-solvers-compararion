@@ -57,17 +57,10 @@ public class Utils {
 
         File f = new File(filename);
         if(!f.exists() || !append)
-            string.append("A,Size,NNZ,Time,MEM,RelErr,host,platform\n");
+            string.append("A,size,NNZ,time,memory_usage,relative_error,host,platform,runtime_version,library,library_version\n");
 
         for(Profile profile : profiles) {
-            string.append(profile.getName()).append(",")
-                    .append(profile.getSize()).append(",")
-                    .append(profile.getNumOfNonZero()).append(",")
-                    .append(profile.getRuntime() / 1E9D).append(",")
-                    .append(profile.getMemoryUsage()).append(",")
-                    .append(profile.getRelativeError()).append(",")
-                    .append(profile.getHost()).append(",")
-                    .append(profile.getPlatform()).append("\n");
+            string.append(profile);
         }
 
         try (FileWriter writer = new FileWriter(f, append)) {

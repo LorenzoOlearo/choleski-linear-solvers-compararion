@@ -1,4 +1,10 @@
 .vscode
 
 java/cholesky-linear-solver/.idea
+java/cholesky-linear-solver/.settings
+java/cholesky-linear-solver/.classpath
+java/cholesky-linear-solver/.project
+java/.metadata
+
 java/cholesky-linear-solver/target
+java/cholesky-linear-solver/bin

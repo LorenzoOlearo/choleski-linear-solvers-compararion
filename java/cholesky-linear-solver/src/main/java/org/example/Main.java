@@ -11,18 +11,6 @@ import java.util.ArrayList;
 
 public class Main {
 
-    private static String[] matrices = {
-            //"Flan_1565",      //Out of memory SIGKILL
-            //"StocF-1465",     //Negative array length??
-            "cfd1",             //Ok
-            "cfd2",             //Ok
-            //"apache2",        //Java heap space out of memory
-            //"G3_circuit",     //Negative array length??
-            //"parabolic_fem",  //Java heap space out of memory
-            "shallow_water1",   //Ok
-            "ex15"              //Ok
-    };
-
     private static Configuration configuration;
 
     public static void main(String[] args) throws IOException {
@@ -35,14 +23,14 @@ public class Main {
         for (String mat : configuration.getMatrices()) {
             System.out.println("---");
             System.out.println(mat);
-            DMatrixSparseCSC A = Utils.loadMatrix(configuration.getMatrices_path() + mat + ".mat");
+            DMatrixSparseCSC A = Utils.loadMatrix(configuration.getMatrices_path() + mat);
             DMatrixRMaj B = Utils.computeB(A);
             Profile p = profile(A,B);
-            p.setName(mat + ".mat");
+            p.setName(mat);
             profiles.add(p);
         }
 
-        Utils.writeProfilesToCSV(profiles, "report-" + configuration.getHost() + "-" + configuration.getPlatform() + ".csv");
+        Utils.writeProfilesToCSV(profiles, configuration.getOutput() + "report-" + configuration.getHost() + "-" + configuration.getPlatform() + "-JAVA.csv");
 
     }
 

@@ -4,8 +4,17 @@ public class Configuration {
 
     private String matrices_path;
     private String platform;
+    private String output;
     private String host;
     private String[] matrices;
+    
+    public String getOutput() {
+    	return output;
+    }
+    
+    public void setOutput(String output) {
+    	this.output = output;
+    }
 
     public String[] getMatrices() {
         return matrices;
