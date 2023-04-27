@@ -30,7 +30,7 @@ public class Main {
             profiles.add(p);
         }
 
-        Utils.writeProfilesToCSV(profiles, configuration.getOutput() + "report-" + configuration.getHost() + "-" + configuration.getPlatform() + "-JAVA.csv");
+        Utils.writeProfilesToCSV(profiles, configuration.getOutput_path() + "report-" + configuration.getHost() + "-" + configuration.getPlatform() + "-JAVA.csv");
 
     }
 
