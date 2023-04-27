@@ -6,6 +6,7 @@ import psutil
 import scipy.io as sio
 import csv
 import pandas as pd
+import argparse
 
 from os.path import dirname, join as pjoin
 from sksparse.cholmod import cholesky
@@ -39,12 +40,19 @@ def load_sparse_matrix(config, filename):
 
 
 def main():
-   
-    # Get current working directory and parent directory 
+
+    # Get current working directory and parent directory
     working_dir = os.path.dirname(os.path.abspath(__file__))
 
-    # Load config file 
+    # Load config file
     config_file = os.path.join(working_dir, 'config.json')
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--json', help='Path to the json config file', default=config_file)
+    args = parser.parse_args()
+    config_file = args.json
+
+
     with open(config_file, 'r') as f:
         config = json.load(f)
         
