@@ -8,7 +8,7 @@ relative_error = cell(size(configuration.matrices));
 
 for i = 1:size(configuration.matrices, 1)
     
-    A = loadsparse(append(configuration.matrices_path, configuration.matrices{i}));
+    A = loadsparse(append(configuration.matrices_path, filesep, configuration.matrices{i}));
     B = computeB(A);
     tic
     X = choleskysolve(A,B);
