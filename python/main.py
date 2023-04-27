@@ -42,16 +42,15 @@ def main():
    
     # Get current working directory and parent directory 
     working_dir = os.path.dirname(os.path.abspath(__file__))
-    parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-   
+
     # Load config file 
-    config_file = os.path.join(parent_dir, 'config.json')
+    config_file = os.path.join(working_dir, 'config.json')
     with open(config_file, 'r') as f:
         config = json.load(f)
         
-    # Create report file     
-    report_path = os.path.join(working_dir, 'report-' + config['host'] + '-' + config['platform'] + '-Python' + '.csv')
-    with open(report_path, 'w+') as file:
+    # Create report file
+    output_file_path = os.path.join(config['output_path'], ('report-' + config['platform'] + '-'+ config['host'] + '-Python.csv'))
+    with open(output_file_path, 'w+') as file:
         writer = csv.writer(file)
         writer.writerow(["A",
                          "size",
@@ -70,10 +69,10 @@ def main():
         print('Matrix path: ' + config['matrices_path'])
         print('Available matrices:' + str(os.listdir(config['matrices_path'])))
         print('Starting computation...')
-        
-        for filename in os.listdir(config['matrices_path']):
-            if filename.endswith(".mat"):
-                
+
+
+        for filename in config['matrices']:
+
                 print('Computing ' + filename)
                 sparse_mat = load_sparse_matrix(config, filename)
 
@@ -87,7 +86,6 @@ def main():
                 mem_usage = round(np.mean(mem_usage), 2)
 
                 # Computes the relative error
-                # TODO: should we round the error?
                 rel_err = np.linalg.norm(sparse_mat.dot(x) - b) / np.linalg.norm(b)
                 
                 writer.writerow([filename,
@@ -108,9 +106,9 @@ def main():
         print('Total time: ' + str(elapsed_total) + ' seconds')
         
     
-    report_df = pd.read_csv(report_path, sep=',')
+    report_df = pd.read_csv(output_file_path, sep=',')
     print(report_df)
-        
+
     
     
 if __name__ == '__main__':
