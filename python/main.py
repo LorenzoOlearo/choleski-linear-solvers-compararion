@@ -57,7 +57,7 @@ def main():
         config = json.load(f)
         
     # Create report file
-    output_file_path = os.path.join(config['output_path'], ('report-' + config['platform'] + '-'+ config['host'] + '-Python.csv'))
+    output_file_path = os.path.join(config['output_path'], ('report-' + config['host'] + '-'+ config['platform'] + '-Python.csv'))
     with open(output_file_path, 'w+') as file:
         writer = csv.writer(file)
         writer.writerow(["A",
