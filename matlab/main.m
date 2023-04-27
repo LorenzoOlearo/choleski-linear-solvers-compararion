@@ -1,5 +1,7 @@
+
+
 function main(config_file)
-configuration = jsondecode(fileread(config_file));
+configuration = jsondecode(fileread(append(pwd, filesep, config_file)));
 
 matrices = cell(size(configuration.matrices));
 elapsed = cell(size(configuration.matrices));
@@ -7,7 +9,7 @@ relative_error = cell(size(configuration.matrices));
 
 
 for i = 1:size(configuration.matrices, 1)
-    
+    disp(append('Computing: ', configuration.matrices{i}))
     A = loadsparse(append(configuration.matrices_path, filesep, configuration.matrices{i}));
     B = computeB(A);
     tic
