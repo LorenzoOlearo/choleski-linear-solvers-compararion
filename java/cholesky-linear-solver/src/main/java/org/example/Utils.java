@@ -60,7 +60,7 @@ public class Utils {
             string.append("A,size,NNZ,time,memory_usage,relative_error,host,platform,runtime_version,library,library_version\n");
 
         for(Profile profile : profiles) {
-            string.append(profile);
+            string.append(profile).append("\n");
         }
 
         try (FileWriter writer = new FileWriter(f, append)) {
