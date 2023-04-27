@@ -1,27 +1,34 @@
 
-
 function main(config_file)
-configuration = jsondecode(fileread(append(pwd, filesep, config_file)));
-
-matrices = cell(size(configuration.matrices));
-elapsed = cell(size(configuration.matrices));
-relative_error = cell(size(configuration.matrices));
-
-
-for i = 1:size(configuration.matrices, 1)
-    disp(append('Computing: ', configuration.matrices{i}))
-    A = loadsparse(append(configuration.matrices_path, filesep, configuration.matrices{i}));
-    B = computeB(A);
-    tic
-    X = choleskysolve(A,B);
-    elapsed{i} = toc;
-    Xe = computeXe(A);
-    relative_error{i} = norm(X-Xe)/norm(Xe);
+    configuration = jsondecode(fileread(config_file));
     
-    matrices{i} = configuration.matrices{i};
-    clear A B X Xe;
-
-end
+    matrices = cell(size(configuration.matrices));
+    elapsed = cell(size(configuration.matrices));
+    relative_error = cell(size(configuration.matrices));
+    
+    
+    for i = 1:size(configuration.matrices, 1)
+        disp(append('Computing: ', configuration.matrices{i}))
+        A = loadsparse(append(configuration.matrices_path, filesep, configuration.matrices{i}));
+        b = computeB(A);
+        xe = computeXe(A);
+        
+        try
+            tic
+            x = choleskysolve(A,b);
+            clear A
+            elapsed{i} = toc;
+            relative_error{i} = norm(x-xe)/norm(xe);
+        
+            matrices{i} = configuration.matrices{i};
+        catch ME
+            disp('    └──Skipped')
+        end
+    
+    
+        clear A b x xe ans;
+    
+    end
 
 
 end
