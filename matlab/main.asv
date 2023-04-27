@@ -10,8 +10,8 @@ function main(config_file)
     for i = 1:size(configuration.matrices, 1)
         disp(append('Computing: ', configuration.matrices{i}))
         A = loadsparse(append(configuration.matrices_path, filesep, configuration.matrices{i}));
-        b = computeb(A);
-        xe = computexe(A);
+        b = computeB(A);
+        xe = computeXe(A);
         
         try
             tic
@@ -20,7 +20,7 @@ function main(config_file)
             relative_error{i} = norm(x-xe)/norm(xe);
         
             matrices{i} = configuration.matrices{i};
-        catch
+        catch ME
             disp('    └──Skipped')
         end
     
