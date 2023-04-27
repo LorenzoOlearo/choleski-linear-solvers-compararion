@@ -1,0 +1,14 @@
+{
+    "matrices_path": "/home/lollo/Documents/datasets/matrices",
+    "output_path": "/home/lollo/Dropbox/Bicocca/materiale/magistrale/secondo-semestre/metodi-del-calcolo-scientifico/progetto-1/cholesky-linear-solvers-comparison/reports",
+    "platform": "LINUX",
+    "host": "T470",
+    "matrices" : [
+        "cfd1.mat",
+        "apache2.mat",
+        "G3_circuit.mat",
+        "parabolic_fem.mat",
+        "shallow_water1.mat",
+        "ex15.mat"
+    ]
+}
