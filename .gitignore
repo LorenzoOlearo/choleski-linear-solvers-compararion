@@ -1,5 +1,6 @@
 .vscode
 *.csv
+*.asm
 
 java/cholesky-linear-solver/.idea
 java/cholesky-linear-solver/.settings
