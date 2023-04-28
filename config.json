@@ -1,6 +1,6 @@
 {
     "matrices_path": "PATH_TO_MATRICES_DIR",
-    "output": "PATH_TO_OUTPUT_DIR",
+    "output_path": "PATH_TO_OUTPUT_DIR",
     "platform": "OS_NAME",
     "host": "HOST_NAME",
     "matrices" : [
