@@ -10,3 +10,5 @@ java/.metadata
 
 java/cholesky-linear-solver/target
 java/cholesky-linear-solver/bin
+
+env
