@@ -23,14 +23,14 @@ public class Main {
         for (String mat : configuration.getMatrices()) {
             System.out.println("---");
             System.out.println(mat);
-            DMatrixSparseCSC A = Utils.loadMatrix(configuration.getMatrices_path() + mat);
+            DMatrixSparseCSC A = Utils.loadMatrix(configuration.getMatrices_path() + System.getProperty("file.separator") + mat);
             DMatrixRMaj B = Utils.computeB(A);
             Profile p = profile(A,B);
             p.setName(mat);
             profiles.add(p);
         }
 
-        Utils.writeProfilesToCSV(profiles, configuration.getOutput_path() + "report-" + configuration.getHost() + "-" + configuration.getPlatform() + "-Java.csv");
+        Utils.writeProfilesToCSV(profiles, configuration.getOutput_path() + System.getProperty("file.separator") + "report-" + configuration.getHost() + "-" + configuration.getPlatform() + "-Java.csv");
 
     }
 
