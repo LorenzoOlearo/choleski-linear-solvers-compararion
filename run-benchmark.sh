@@ -11,3 +11,7 @@ echo
 cd matlab
 matlab -batch "main('./config.json'); exit;"
 cd ..
+echo
+echo RUNNING JULIA ------------------------
+echo
+julia ./julia/main.jl ./julia/config.json
