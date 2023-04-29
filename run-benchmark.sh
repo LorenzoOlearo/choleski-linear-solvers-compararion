@@ -1,5 +1,13 @@
 echo RUNNING JAVA --------------------------
 echo
+FILE=./java/cholesky-linear-solver.jar
+if [ ! -f "$FILE" ]; then
+    echo "$FILE not found. Generating jar file..."
+    cd ./java/cholesky-linear-solver/
+    mvn clean compile assembly:single
+    cp ./target/cholesky-linear-solver.jar ../cholesky-linear-solver.jar
+    cd ../../
+fi
 java -jar ./java/cholesky-linear-solver.jar ./java/config.json
 echo
 echo RUNNING PYTHON ------------------------
