@@ -2,6 +2,7 @@
 *.csv
 *.asm
 *.json
+*.asv
 
 java/cholesky-linear-solver/.idea
 java/cholesky-linear-solver/.settings

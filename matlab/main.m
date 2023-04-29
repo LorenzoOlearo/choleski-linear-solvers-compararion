@@ -1,5 +1,6 @@
 
 function main(config_file)
+
     config = jsondecode(fileread(config_file));
 
     report = table([], [], [], [], [], [], [], [], [], [], [], 'VariableNames', {'A', 'size', 'NNZ', 'time', 'memory_usage', 'relative_error', 'host', 'platform', 'runtime_version', 'library', 'library_version'});
@@ -17,6 +18,10 @@ function main(config_file)
         xe = computexe(A);
         
         try
+            profile clear;
+            profile('-memory','on');
+            setpref('profiler','showJitLines',1);
+
             tic
             x = choleskysolve(A,b);
             elapsed = toc;
@@ -24,14 +29,20 @@ function main(config_file)
             matrix_name = config.matrices{i};
             matrix_size = size(A, 1);
             matrix_nnz = nnz(A);
-            memory_usage = -1;
-            relative_error = norm(x-xe)/norm(xe);
+            relative_error = norm(x-xe) / norm(xe);
+
+            profilerInfo = profile('info');
+            functionNames = {profilerInfo.FunctionTable.FunctionName};
+            functionIndexInNamesTable = find(strcmp(functionNames(:), 'choleskysolve'));
+            memory_usage = (profilerInfo.FunctionTable(functionIndexInNamesTable).PeakMem) / 1000000;
 
             new_line = {matrix_name, matrix_size, matrix_nnz, elapsed, memory_usage, relative_error, host, platform, runtime_version, library, library_version};
             report = [report ; new_line];
 
-        catch
+
+        catch ex
             disp('    └──Skipped')
+            disp(ex)
         end
     
     
