@@ -3,6 +3,8 @@ package org.example;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.data.DMatrixSparseCSC;
+import org.example.solver.SystemSolver;
+import org.example.solver.SystemSolverException;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -25,16 +27,20 @@ public class Main {
             System.out.println(mat);
             DMatrixSparseCSC A = Utils.loadMatrix(configuration.getMatrices_path() + System.getProperty("file.separator") + mat);
             DMatrixRMaj B = Utils.computeB(A);
-            Profile p = profile(A,B);
-            p.setName(mat);
-            profiles.add(p);
+            try {
+                Profile p = profile(A,B);
+                p.setName(mat);
+                profiles.add(p);
+            } catch (SystemSolverException e) {
+                System.out.println("skipped for reason: " + e.getMessage());
+            }
         }
 
         Utils.writeProfilesToCSV(profiles, configuration.getOutput_path() + System.getProperty("file.separator") + "report-" + configuration.getHost() + "-" + configuration.getPlatform() + "-Java.csv");
 
     }
 
-    private static Profile profile(DMatrixSparseCSC A, DMatrixRMaj B) {
+    private static Profile profile(DMatrixSparseCSC A, DMatrixRMaj B) throws SystemSolverException {
         Profile profile = new Profile();
         profile.setPlatform(configuration.getPlatform());
         profile.setHost(configuration.getHost());
