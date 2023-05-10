@@ -3,6 +3,8 @@
 *.asm
 *.json
 *.asv
+*.png
+*.jpg
 
 java/cholesky-linear-solver/.idea
 java/cholesky-linear-solver/.settings

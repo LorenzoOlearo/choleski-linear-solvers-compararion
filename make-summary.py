@@ -41,19 +41,23 @@ def make_plot(df, host):
 
 
         subfig[0].set_title('Memory Usage [MB]')
-        subfig[0].set_xticklabels(['LinearAlgebra', 'scipy', 'ejml', 'matlab'], rotation=30)
-        sns.barplot(data=group, x='library', y='memory_usage', ax=subfig[0], hue='platform', errorbar=None).set_yscale('log')
+        sns.barplot(data=group, x='library', y='memory_usage', ax=subfig[0], hue='platform', errorbar=None, palette='hls').set_yscale('log')
+        subfig[0].set_xticklabels(['Julia-LinearAlgebra', 'Python-scipy', 'Java-ejml', 'MATLAB'], rotation=15)
         
         subfig[1].set_title('Time [seconds]')
-        sns.barplot(data=group, x='library', y='time', ax=subfig[1], hue='platform', errorbar=None).set_yscale('log')
+        sns.barplot(data=group, x='library', y='time', ax=subfig[1], hue='platform', errorbar=None, palette='hls').set_yscale('log')
+        subfig[1].set_xticklabels(['Julia-LinearAlgebra', 'Python-scipy', 'Java-ejml', 'MATLAB'], rotation=15)
         
         subfig[2].set_title('Relative Error')
-        sns.barplot(data=group, x='library', y='relative_error', ax=subfig[2], hue='platform', errorbar=None).set_yscale('log')
+        sns.barplot(data=group, x='library', y='relative_error', ax=subfig[2], hue='platform', errorbar=None, palette='hls').set_yscale('log')
+        subfig[2].set_xticklabels(['Julia-LinearAlgebra', 'Python-scipy', 'Java-ejml', 'MATLAB'], rotation=15)
         
 
         save_path = os.path.join(os.getcwd(), 'reports', 'plots')
         if (os.path.exists(save_path) == False):
             os.makedirs(save_path)
+
+        plt.tight_layout()
         plt.savefig(os.path.join(save_path, name))
         plt.close()
 
