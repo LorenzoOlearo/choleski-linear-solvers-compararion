@@ -1,0 +1,56 @@
+\documentclass{report}
+
+\usepackage{hyperref}
+
+\begin{document}
+    \chapter[Enviroments]{Used Enviroments}
+        Here are reported the enviroments and the libraries used for the benchmarks.
+        \section{MATLAB}
+            Sparse matrices and Cholesky factorization are natively supported in MATLAB.
+            The \texttt{chol} method is used to compute the Cholesky factorization.
+        \section{Java}
+            The open source library EJML is used for sparse matrices and for the Cholesky factorization.
+            The \texttt{.mat} files are upload with the help of the MFL library.
+            The EJML library presents some limitations, prominent among which is the incapability to apply the Cholesky decomposition to very large matrices due to the use of integers for array indexing. This issue is known to the developers but as of may 2023 it has not been fixed yet.
+
+            \begin{itemize}
+                \item \href{http://ejml.org/}{ejml}
+                \item \href{https://github.com/HebiRobotics/MFL}{MFL}
+            \end{itemize}
+            
+        \section{Python}
+            Scipy is used for sparse matrices with sksparse for the Cholesky factorization.
+            Scipy also provides the methods for reading the \texttt{.mat} files.
+            The sksparse.cholmod module used for the Cholesky factorization is not available via the packet manager for windows, the module is compiled from source according to the instuctions on the \href{https://github.com/xmlyqing00/Cholmod-Scikit-Sparse-Windows}{github repository by xmlqing00}.
+            The sksparse.cholmod module is based on the cholmod library, which is written in C and is part of the SuiteSparse package.
+
+            \begin{itemize}
+                \item \href{https://www.scipy.org/}{scipy}
+                \item \href{https://github.com/scikit-sparse/scikit-sparse} {scikit-sparse}
+                \item \href{http://suitesparse.com}{SuiteSparse}
+            \end{itemize}
+
+        \section{Julia}
+            The SparseArrays package is used for sparse matrices and the LinearAlgebra package, for the Cholesky factorization.
+            The MAT package is used for reading the \texttt{.mat} files.
+            The LinearAlgebra package uses the cholmod library from the SuiteSparse package to compute the Cholesky factorization.
+
+            \begin{itemize}
+                \item \href{https://docs.julialang.org/en/v1/stdlib/SparseArrays/}{SparseArrays}
+                \item \href{https://docs.julialang.org/en/v1/stdlib/LinearAlgebra/}{LinearAlgebra}
+                \item \href{https://github.com/JuliaIO/MAT.jl}{MAT}
+                \item \href{http://suitesparse.com}{SuiteSparse}
+            \end{itemize}
+
+    \chapter{Benchmarks}
+        Benchmarks are run once for each enviroment and each matrix, both on windows and on linux using the same machine.
+        \section{Where and how}
+            \begin{itemize}
+                \item \textbf{TIME}: the computation time is mesured from the moment the whole matrix is loaded in memory to the moment the linear system is solved.
+                \item \textbf{MEMORY USAGE}: the memory usage is estimated by the avarege increment in memory registerd during the computation for the linear system solution.
+                Due to the nature of the enviroments the memory usage can be difficult to mesure and the mesurements can be very inaccurate.
+                In particular, Java being run in a virtual machine and presenting a garbage collector, might produce results that are scarcely reliable. Furthermore, in the different enviroments, the implementation of the native functions for memory profiling might vary bethween different operating systems.
+                \item \textbf{RELATIVE ERROR}: the relative error is comupted against a reference solution obtained with the generic linear solver of each enviroment and while these reference solutions are mostly reliable, they might present slight differences among the different enviroments, a more precise solution would be produced using the same precalculated solution for all.
+            \end{itemize}
+        \section{Results}
+\end{document}
