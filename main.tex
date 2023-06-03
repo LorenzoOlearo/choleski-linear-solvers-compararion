@@ -3,15 +3,24 @@
 \usepackage{hyperref}
 
 \begin{document}
-    \chapter[Enviroments]{Used Enviroments}
-        Here are reported the enviroments and the libraries used for the benchmarks.
+    \chapter[Enviroments]{Ambienti}
+        Sono qui riportati i dettagli riguardo gli ambienti di sviluppo utilizzati, 
+        dividendo per linguaggio di programmazione la descrizione delle librerie utilizzate.
+
         \section{MATLAB}
-            Sparse matrices and Cholesky factorization are natively supported in MATLAB.
-            The \texttt{chol} method is used to compute the Cholesky factorization.
+            MATLAB supporta nativamente le matrici sparse e la fattorizzazione di Cholesky.
+            Il metodo \texttt{chol} è stato utilizzato per calcolare la fattorizzazione e
+            l'operatore \verb$\$ per risolvere il sistema lineare.
+
         \section{Java}
-            The open source library EJML is used for sparse matrices and for the Cholesky factorization.
-            The \texttt{.mat} files are upload with the help of the MFL library.
-            The EJML library presents some limitations, prominent among which is the incapability to apply the Cholesky decomposition to very large matrices due to the use of integers for array indexing. This issue is known to the developers but as of may 2023 it has not been fixed yet.
+            La libreria Java EJML è stata utilizzata per la rappresentazione sparsa delle matrici
+            e per la fattorizzazione di Cholesky.
+            I file \texttt{.mat} sono stati caricati con l'aiuto della libreria MFL.
+            Risulta importante notare la presenza di alcune limitazioni nella libreria EJML,
+            tra le quali la più importante è l'impossibilità di applicare la fattorizzazione di Cholesky
+            su matrici di grandi dimensioni a causa dell'utilizzo di interi a per l'indicizzazione degli array.
+            Questa limitazione è nota agli sviluppatori ma al momento della stesura di questo documento rimane
+            una problematica non risolta.
 
             \begin{itemize}
                 \item \href{http://ejml.org/}{ejml}
@@ -19,21 +28,28 @@
             \end{itemize}
             
         \section{Python}
-            Scipy is used for sparse matrices with sksparse for the Cholesky factorization.
-            Scipy also provides the methods for reading the \texttt{.mat} files.
-            The sksparse.cholmod module used for the Cholesky factorization is not available via the packet manager for windows, the module is compiled from source according to the instuctions on the \href{https://github.com/xmlyqing00/Cholmod-Scikit-Sparse-Windows}{github repository by xmlqing00}.
-            The sksparse.cholmod module is based on the cholmod library, which is written in C and is part of the SuiteSparse package.
+            La libreria SciPy è stata utilizzata per per le matrici sparese insieme a sksparse per la fattorizzazione 
+            di Cholesky.
+            SciPy offre inoltre le funzionalità per la lettura dei file \texttt{.mat}.
+            La fattorizzazione di Cholesky è implementata dal modulo sksparse.cholmod, che a sua volta si basa sulla
+            libreria open source cholmod, scritta in C e parte del package SuiteSparse.
+            \`E da segnalare la mancaza del modulo sksparse.cholmod, necessario per la fattorizzazione, tramite il 
+            packet manager \texttt{pip} sui sistemi Windows, il modulo è stato compilato e installato seguendo le
+            istruzioni presenti sul 
+            \href{https://github.com/xmlyqing00/Cholmod-Scikit-Sparse-Windows}{repository github di xmlqing00}.
 
             \begin{itemize}
-                \item \href{https://www.scipy.org/}{scipy}
+                \item \href{https://www.scipy.org/}{SciPy}
                 \item \href{https://github.com/scikit-sparse/scikit-sparse} {scikit-sparse}
                 \item \href{http://suitesparse.com}{SuiteSparse}
             \end{itemize}
 
         \section{Julia}
-            The SparseArrays package is used for sparse matrices and the LinearAlgebra package, for the Cholesky factorization.
-            The MAT package is used for reading the \texttt{.mat} files.
-            The LinearAlgebra package uses the cholmod library from the SuiteSparse package to compute the Cholesky factorization.
+            Il package SparseArrays mette a disposizione le classi per le matrici sparse, la fattorizzazione di Cholesky
+            è implementata dal package LinearAlgebra.
+            Il package MAT è stato utilizzato per la lettura dei file \texttt{.mat}.
+            L'implementazione della fattorizzazione di Cholesky del package LinearAlgebra si basa sulla libreria cholmod
+            del pacchetto SuiteSparse.
 
             \begin{itemize}
                 \item \href{https://docs.julialang.org/en/v1/stdlib/SparseArrays/}{SparseArrays}
@@ -43,14 +59,40 @@
             \end{itemize}
 
     \chapter{Benchmarks}
-        Benchmarks are run once for each enviroment and each matrix, both on windows and on linux using the same machine.
-        \section{Where and how}
+        I benchmark sono stati eseguiti una volta per ogni ambiente di sviluppo e per ogni matrice, sia in un sistema
+        Windows che in un sistema Linux, utilizzando la stessa macchina.
+        In particolare è stato utilizzato un processore AMD Ryzen 7 PRO 6850U a 2.70 GHz con 32 GB di RAM.
+        \section{Modalità di misurazione}
             \begin{itemize}
-                \item \textbf{TIME}: the computation time is mesured from the moment the whole matrix is loaded in memory to the moment the linear system is solved.
-                \item \textbf{MEMORY USAGE}: the memory usage is estimated by the avarege increment in memory registerd during the computation for the linear system solution.
-                Due to the nature of the enviroments the memory usage can be difficult to mesure and the mesurements can be very inaccurate.
-                In particular, Java being run in a virtual machine and presenting a garbage collector, might produce results that are scarcely reliable. Furthermore, in the different enviroments, the implementation of the native functions for memory profiling might vary bethween different operating systems.
-                \item \textbf{RELATIVE ERROR}: the relative error is comupted against a reference solution obtained with the generic linear solver of each enviroment and while these reference solutions are mostly reliable, they might present slight differences among the different enviroments, a more precise solution would be produced using the same precalculated solution for all.
+                \item \textbf{TIME}: il tempo di computazione è calcolato dal momento in cui la matrice è completamente
+                caricata in memoria nel corretto formato per l'esecuzione della fattorizzazione di Cholesky fino al 
+                momento in cui il sistema lineare è risolto. In generale il tempo di computazione comprende anche il 
+                tempo in cui il processo è in stato ready ma non è in esecuzione su nessun core.
+                \item \textbf{MEMORY USAGE}: la memoria utilizzata è stimata come la differenza tra la memoria occupata 
+                dal processo prima dell'esecuzione e quella occupata dal processo subito dopo la risoluzione.
+                A causa della natura degli ambienti utilizzati la misurazione della memoria può essere difficile e 
+                risultare particolarmente inaccurata. In particolare Java, essendo eseguito in una virtual machine e
+                utilizzando un garbage collector potrebbe produrre risultati poco affidabili.\\
+                Inoltre, a seconda dell'ambiente, l'implementazione delle funzioni native per il profiling potrebbe 
+                variare e misurare in modo diverso la memoria, in particolare tra sistemi operativi diversi anche lo 
+                stesso linguaggio potrebbe presentare implementazioni differenti.
+                \item \textbf{RELATIVE ERROR}: l'errore relativo è calcolato come la differenza tra la soluzione 
+                ottentuta con la decomposizione di Cholesky e un riferimento calcolato con un metodo generico per la
+                risoluzione di sistemi lineari messo a disposizione dall'ambiente di sviluppo utilizzato.
+                Per quanto i riferimenti così calcolati siano in generale affidabili, potrebbero presentare delle 
+                differenze tra i diversi ambienti per quanto riguarda la precisione della soluzione. 
+                Un approccio più preciso sarebbe stato quello di utilizzare la stessa soluzione precalcolata per tutti 
+                gli ambienti.
             \end{itemize}
+        
         \section{Results}
+            In questa sezione sono riportati i risultati dei benchmark suddivisi per ambiente di sviluppo.
+            \subsection{MATLAB}
+            \subsection{Java}
+            \subsection{Python}
+            \subsection{Julia}
+        
+        \section{Conclusioni}
+            
+                
 \end{document}
