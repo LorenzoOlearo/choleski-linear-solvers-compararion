@@ -1,9 +1,18 @@
 \documentclass{report}
 
 \usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{booktabs}
 
 \begin{document}
-    \chapter[Enviroments]{Ambienti}
+    
+    \chapter*{Introduzione}
+        Il progetto consiste nella comparazione delle prestazioni di alcuni ambienti di sviluppo per quanto riguarda
+        la fattorizzazione di Cholesky di matrici sparse.\\
+        L'obiettivo è quello di individuare l'ambiente di sviluppo open source che presenta le migliori prestazioni
+        in termini di tempo di esecuzione, memoria utilizzata e precisione della soluzione.\\
+
+    \chapter[Enviroments]{Ambienti di sviluppo}
         Sono qui riportati i dettagli riguardo gli ambienti di sviluppo utilizzati, 
         dividendo per linguaggio di programmazione la descrizione delle librerie utilizzate.
 
@@ -23,16 +32,16 @@
             una problematica non risolta.
 
             \begin{itemize}
-                \item \href{http://ejml.org/}{ejml}
+                \item \href{http://ejml.org/}{EJML}
                 \item \href{https://github.com/HebiRobotics/MFL}{MFL}
             \end{itemize}
             
         \section{Python}
-            La libreria SciPy è stata utilizzata per per le matrici sparese insieme a sksparse per la fattorizzazione 
-            di Cholesky.
+            La libreria SciPy è stata utilizzata per per le matrici sparese insieme a scikit-sparse per la 
+            fattorizzazione di Cholesky.
             SciPy offre inoltre le funzionalità per la lettura dei file \texttt{.mat}.
             La fattorizzazione di Cholesky è implementata dal modulo sksparse.cholmod, che a sua volta si basa sulla
-            libreria open source cholmod, scritta in C e parte del package SuiteSparse.
+            libreria open source cholmod, scritta in C e parte di SuiteSparse.
             \`E da segnalare la mancaza del modulo sksparse.cholmod, necessario per la fattorizzazione, tramite il 
             packet manager \texttt{pip} sui sistemi Windows, il modulo è stato compilato e installato seguendo le
             istruzioni presenti sul 
@@ -45,11 +54,12 @@
             \end{itemize}
 
         \section{Julia}
-            Il package SparseArrays mette a disposizione le classi per le matrici sparse, la fattorizzazione di Cholesky
+            Il package SparseArrays mette a disposizione le classi per le matrici sparse, mentre la fattorizzazione di 
+            Cholesky
             è implementata dal package LinearAlgebra.
             Il package MAT è stato utilizzato per la lettura dei file \texttt{.mat}.
             L'implementazione della fattorizzazione di Cholesky del package LinearAlgebra si basa sulla libreria cholmod
-            del pacchetto SuiteSparse.
+            della suite di librerie SuiteSparse.
 
             \begin{itemize}
                 \item \href{https://docs.julialang.org/en/v1/stdlib/SparseArrays/}{SparseArrays}
@@ -61,8 +71,13 @@
     \chapter{Benchmarks}
         I benchmark sono stati eseguiti una volta per ogni ambiente di sviluppo e per ogni matrice, sia in un sistema
         Windows che in un sistema Linux, utilizzando la stessa macchina.
-        In particolare è stato utilizzato un processore AMD Ryzen 7 PRO 6850U a 2.70 GHz con 32 GB di RAM.
+        In particolare è stato utilizzato un processore ad 8 core AMD Ryzen 7 PRO 6850U a 2.70 GHz con 32 GB di RAM.
+
         \section{Modalità di misurazione}
+
+            Le misurazioni sono effettuate sulla risoluzione del sistema $Ax = b$ dove il termine noto $b$ è calcolato
+            in modo tale che $b = A*xe$ con $xe$ vettore di tutti 1.\\
+
             \begin{itemize}
                 \item \textbf{TIME}: il tempo di computazione è calcolato dal momento in cui la matrice è completamente
                 caricata in memoria nel corretto formato per l'esecuzione della fattorizzazione di Cholesky fino al 
@@ -76,23 +91,90 @@
                 Inoltre, a seconda dell'ambiente, l'implementazione delle funzioni native per il profiling potrebbe 
                 variare e misurare in modo diverso la memoria, in particolare tra sistemi operativi diversi anche lo 
                 stesso linguaggio potrebbe presentare implementazioni differenti.
-                \item \textbf{RELATIVE ERROR}: l'errore relativo è calcolato come la differenza tra la soluzione 
-                ottentuta con la decomposizione di Cholesky e un riferimento calcolato con un metodo generico per la
-                risoluzione di sistemi lineari messo a disposizione dall'ambiente di sviluppo utilizzato.
-                Per quanto i riferimenti così calcolati siano in generale affidabili, potrebbero presentare delle 
-                differenze tra i diversi ambienti per quanto riguarda la precisione della soluzione. 
-                Un approccio più preciso sarebbe stato quello di utilizzare la stessa soluzione precalcolata per tutti 
-                gli ambienti.
+                \item \textbf{RELATIVE ERROR}: l'errore relativo è calcolato come $||x-xe||/||xe||$, ovvero la norma 
+                della differenza tra la soluzione ottentuta con la decomposizione di Cholesky e il vettore di 
+                riferimento tutti 1. Il vettore dei temini noti $b$ è calcolato come $b = A*xe$ da ciascun ambiente.
+                Per quanto i vettori così calcolati siano in generale affidabili, potrebbero presentare delle differenze
+                tra i diversi ambienti per quanto riguarda la precisione della soluzione. Un approccio più preciso 
+                sarebbe stato quello di utilizzare lo stesso vettore precalcolato per tutti gli ambienti.
             \end{itemize}
+
+        \section{Matrici}
+            Sono state utilizzate per i benchmark nove matrici sparese messe a disposizione sul sito web 
+            \href{https://sparse.tamu.edu/}{The SuiteSparse Matrix Collection}. Le matrici sono di diverse dimensioni 
+            e densità. In particolare in Table~\ref{tab:matrices} sono riportati i dettagli delle matrici utilizzate.
+
+            \begin{table}[h]
+                \centering
+                
+                \begin{tabular}{@{}lrrr@{}}
+                \toprule
+                \textbf{Nome}   
+                & \textbf{Dimensione} & \textbf{Nonzero} & \textbf{Densità} \\ 
+                \midrule
+                \href{https://sparse.tamu.edu/Janna/Flan_1565}{Flan\_1565}      
+                & 1\,564\,794    & 114\,165\,372    & 0.0047\%         \\
+                \href{https://sparse.tamu.edu/Janna/StocF-1465}{StocF-1465}      
+                & 1\,465\,137    & 21\,005\,389     & 0.0010\%         \\
+                \href{https://sparse.tamu.edu/Rothberg/cfd2}{cfd2}            
+                & 123\,440       & 3\,085\,406      & 0.0202\%         \\
+                \href{https://sparse.tamu.edu/Rothberg/cfd1}{cfd1}            
+                & 70\,656        & 1\,825\,580      & 0.0366\%         \\
+                \href{https://sparse.tamu.edu/AMD/G3_circuit}{G3\_circuit}     
+                & 1\,585\,478    & 7\,660\,826      & 0.0003\%         \\
+                \href{https://sparse.tamu.edu/Wissgott/parabolic_fem}{parabolic\_fem}  
+                & 525\,825       & 3\,674\,625      & 0.0013\%         \\
+                \href{https://sparse.tamu.edu/GHS_psdef/apache2}{apache2}         
+                & 715\,176       & 4\,817\,870      & 0.0009\%         \\
+                \href{https://sparse.tamu.edu/MaxPlanck/shallow_water1}{shallow\_water1} 
+                & 81\,920        & 327\,680         & 0.0049\%         \\
+                \href{https://sparse.tamu.edu/FIDAP/ex15}{ex15}            
+                & 6\,867         & 98\,671          & 0.2092\%         \\ 
+                \bottomrule
+                \end{tabular}%
+                
+                \caption{Sommario delle matrici utilizzate nei benchmark.}
+                \label{tab:matrices}
+                \end{table}
         
         \section{Results}
             In questa sezione sono riportati i risultati dei benchmark suddivisi per ambiente di sviluppo.
             \subsection{MATLAB}
+                \`E interessante notare come MATLAB utilizzando la funzione \texttt{chol} non riesca a fattorizzare
+                tutte le matrici testate perché termina la memoria a disposizione mentre utilizzando direttamente
+                l'operatore \verb$\$ non presenta questo problema.
             \subsection{Java}
+                Osservando i risultati ottentuti si può notare come l'errore relativo e la memoria utilizzata per ogni 
+                matrice sia stabile tra i due sistemi operativi, mentre il tempo di computazione varia pur restando 
+                nello stesso ordine di grandezza. In particolare l'esecuzione in un sistema Windows risulta essere
+                lievemente più veloce.
             \subsection{Python}
+                L'implementazione Windows risulta essere generalmente meno precisa e sensibilmente più lenta rispetto
+                alla implementazione Linux. L'utilizzo della memoria utilizzando un sistema Windows risulta essere però
+                più contenuto.
             \subsection{Julia}
+                L'utilizzo della memoria in un sistema Windows è sempre sensibilmente maggiore così come l'errore 
+                relativo, ma tempi di calcolo sono spesso favorevoli in ambiente Windows.
         
         \section{Conclusioni}
+            Anzitutto è evidente che l'unico ambiente in cui è stato possibile fattorizzare tutte le matrici è stato
+            Julia e solo con un sistema operativo Linux. \`E interessante notare che la libreria Python non ha raggiunto
+            lo stesso risultato nonostante utilizzi per la fattorizzazione la stessa libreria, questo suggerisce una
+            maggiore ottimizzazione nella gestione della memoria per le matrici sparse e non tanto nell'implementazione 
+            della fattorizzazione di Cholesky.\\
+            Julia risulta essere anche l'ambiente dove l'errore relativo registrato è minore nella maggior parte 
+            dei casi.
+            Per quanto riguarda i tempi di computazione Julia risulta essere l'ambiente più veloce in quasi ogni caso.\\
+            In generale si può notare come il caso in cui Julia otiene risultati peggiori rispetto agli altri è quello 
+            con la matrice ex15, ovvero la più piccola delle matrici ma anche la più densa,questo potrebbe suggerire 
+            che la libreria perda in prestazioni all'aumentare della densità più delle altre, ma maggiori test sarebbero
+            necessari per confermare questa ipotesi.\\
+            In ambiente Julia l'utilizzo della memoria è generalmente maggiore rispetto a quanto succede in Python ma 
+            non supera l'utilizzo di memoria di Java e MATLAB.\\
+            In conclusione Julia sembrerebbe essere l'ambiente più performante sia in termini di tempo di esecuzione che
+            di precisione della soluzione e pur non essendo il meglio ottimizzato nell'utilizzo della memoria risulta
+            essere l'unico ambiente in cui è stato possibile fattorizzare tutte le matrici testate.
+
             
                 
 \end{document}
