@@ -19,10 +19,10 @@ from scipy import __version__ as scipy_version
 @profile 
 def sparse_matrix_solver(A, b):
     try:
-        start = time.time()
+        start = time.time_ns()
         factor = cholesky(A)
-        end = time.time()
-        elapsed = round(end - start, 3)
+        end = time.time_ns()
+        elapsed = round(end - start, 3) / 10e3
         x = factor(b)
     except Exception as e:
         print('Cholesky decomposition failed:' + str(e))
@@ -121,3 +121,4 @@ def main():
     
 if __name__ == '__main__':
     main()
+
