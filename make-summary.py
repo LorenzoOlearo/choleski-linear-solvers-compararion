@@ -9,6 +9,7 @@ def clean_data(df):
     df = df.sort_values(by=['A', 'memory_usage', 'host', 'platform'], ascending=[True, True, True, True], ignore_index=True)
     df['memory_usage'] = df['memory_usage'].round(3)
     df['time'] = df['time'].round(3)
+    df.drop(df[df['time'] == -1].index, inplace=True)
 
     return df
 
@@ -16,7 +17,6 @@ def clean_data(df):
 def make_plot(df, host):
 
     sns.set_theme()
-
 
     # TODO: filter the dataframe to only include the specified host
     # df = df[df['host'] == host]
@@ -30,6 +30,7 @@ def make_plot(df, host):
         fig, subfig = plt.subplots(nrows=1, ncols=3, figsize=(20, 5))
         fig.suptitle(f"{name}", fontsize=16)
 
+        # Add the missing rows for the libraries that are not present in the current group        
         if group[group['library'] == 'MATLAB'].empty == True:
             group = pd.concat([group, pd.DataFrame({'library': ['MATLAB'], 'memory_usage': [0], 'time': [0], 'relative_error': [0]})], ignore_index=True)
         if group[group['library'] == 'scipy'].empty == True:
@@ -38,41 +39,38 @@ def make_plot(df, host):
             group = pd.concat([group, pd.DataFrame({'library': ['LinearAlgebra'], 'memory_usage': [0], 'time': [0], 'relative_error': [0]})], ignore_index=True)
         if group[group['library'] == 'org.ejml'].empty == True:
             group = pd.concat([group, pd.DataFrame({'library': ['org.ejml'], 'memory_usage': [0], 'time': [0], 'relative_error': [0]})], ignore_index=True)
-
+            
+        group = group.sort_values(by='library')
 
         subfig[0].set_title('Time [seconds]')
-        ax = sns.barplot(data=group, x='library', y='time', ax=subfig[0], hue='platform', errorbar=None, palette='hls').set_yscale('log')
-        subfig[0].set_xticklabels(['Julia-LinearAlgebra', 'Python-scipy', 'Java-ejml', 'MATLAB'], rotation=15)
+        sns.barplot(data=group, x='library', y='time', ax=subfig[0], hue='platform', errorbar=None, palette='hls').set_yscale('log')
+        a = 1
+        subfig[0].set_xticklabels(['Julia-LinearAlgebra', 'MATLAB', 'Java-ejml', 'Python-scipy'], rotation=15)
         for p in subfig[0].patches:
             subfig[0].annotate(format(p.get_height(), '.2f'), (p.get_x() + p.get_width() / 2., p.get_height()), ha='center', va='center', xytext=(0, 10), textcoords='offset points')
 
-        # Increase top paddigin to make room for the annotation
-        subfig[0].set_ylim(top=subfig[0].get_ylim()[1] * 1.2)
-
-
-
         subfig[1].set_title('Memory Usage [MB]')
-        ax = sns.barplot(data=group, x='library', y='memory_usage', ax=subfig[1], hue='platform', errorbar=None, palette='hls').set_yscale('log')
-        subfig[1].set_xticklabels(['Julia-LinearAlgebra', 'Python-scipy', 'Java-ejml', 'MATLAB'], rotation=15)
+        sns.barplot(data=group, x='library', y='memory_usage', ax=subfig[1], hue='platform', errorbar=None, palette='hls').set_yscale('log')
+        subfig[1].set_xticklabels(['Julia-LinearAlgebra', 'MATLAB', 'Java-ejml', 'Python-scipy'], rotation=15)
         for p in subfig[1].patches:
             subfig[1].annotate(format(p.get_height(), '.0f'), (p.get_x() + p.get_width() / 2., p.get_height()), ha='center', va='center', xytext=(0, 10), textcoords='offset points')
 
-        # Increase top paddigin to make room for the annotation
-        subfig[1].set_ylim(top=subfig[1].get_ylim()[1] * 1.2)
-
         subfig[2].set_title('Relative Error')
-        ax = sns.barplot(data=group, x='library', y='relative_error', ax=subfig[2], hue='platform', errorbar=None, palette='hls').set_yscale('log')
-        subfig[2].set_xticklabels(['Julia-LinearAlgebra', 'Python-scipy', 'Java-ejml', 'MATLAB'], rotation=15)
+        sns.barplot(data=group, x='library', y='relative_error', ax=subfig[2], hue='platform', errorbar=None, palette='hls').set_yscale('log')
+        subfig[2].set_xticklabels(['Julia-LinearAlgebra', 'MATLAB', 'Java-ejml', 'Python-scipy'], rotation=15)
         for p in subfig[2].patches:
             subfig[2].annotate(format(p.get_height(), '.1e'), (p.get_x() + p.get_width() / 2., p.get_height()), ha='center', va='center', xytext=(0, 10), textcoords='offset points')
-        # Increase top paddigin to make room for the annotation
-        subfig[2].set_ylim(top=subfig[2].get_ylim()[1] * 1.2)
 
 
-        # Rewmove the legend from the subplots
+        # Remove the legend from the subplots
         subfig[0].get_legend().remove()
         subfig[1].get_legend().remove()
         subfig[2].get_legend().remove()
+        
+        
+        subfig[0].set_ylim(top=subfig[0].get_ylim()[1] * 1.2)
+        subfig[1].set_ylim(top=subfig[1].get_ylim()[1] * 1.2)
+        subfig[2].set_ylim(top=subfig[2].get_ylim()[1] * 1.2)
 
         # Add a legend to the figure
         handles, labels = subfig[0].get_legend_handles_labels()
@@ -116,3 +114,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
