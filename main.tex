@@ -149,7 +149,9 @@
                 sia un errore dovuto al calolo della memoria dell'ambiente MATLAB.\\
                 In Figure~\ref{fig:matlab_overflow} è riportato il comando MATLAB utilizzato per il calcolo della 
                 memoria utilizzata ed è possibile vedere come il valore restituito per la matrice \texttt{cfd2.mat} sia
-                molto elevato mentre quello restituito per la matrice \texttt{cfd1.mat} sia molto più contenuto.
+                molto elevato mentre quello restituito per la matrice \texttt{cfd1.mat} sia molto più contenuto. 
+                Si è provato ad aumentare la memoria disponibile per l'heap di MATLAB, ma nonostante questo il problema 
+                persiste.
                 \begin{figure}[h]
                     \includegraphics[width=\textwidth]{matlab_overflow}
                     \caption{Comando MATLAB utilizzato per la profilazione della memoria}
@@ -303,15 +305,128 @@
                 \end{table}
             
         \section{Comparazione}
+            In questa sezione sono riportati i risultati dei benchmark divisi
+            matrice per matrice per mettere in luce come i vari ambienti di 
+            sviluppo producano risultati diversi gli uni dagli altri.
+            \subsection{ex15}
+                I risultati sulla matrice ex15 mostrano MATLAB come soluzione 
+                meno dispensiosa di memoria ma anche come la meno precisa.
+                Python risulta ottenere la migliore precisione in particolare 
+                in ambiente Linux ma occupa molta più memoria degli altri 
+                ambienti. Per quanto riguarda i tempi di esecuzione Java ottiene
+                i tempi migliori. \`E interessante notare che i risultati di
+                Python varino molto più degli altri tra sistemi Windows e Linux.
+                \begin{figure}[h]
+                    \includegraphics[width=\textwidth]{ex15}
+                    \caption{Comparazione dei risultati per la matrice ex15.}
+                    \label{fig:ex15}
+                \end{figure}
+            \subsection{shallow\_water1}
+                Come mostrato in Figura~\ref{fig:shallow_water1} Julia ottiene i
+                migliori risultati in tutte le metriche, è infatti l'ambiente
+                più veloce e preciso utilizzando meno memoria di tutti gli altri
+                linguaggi. Anche per questa matrice i risultati con Python sono
+                quelli dove il cambio di sistema operativo porta la maggiore 
+                differenza, in particolare per quelli che sono i tempi di 
+                calcolo e l'uso della memoria.
+                \begin{figure}[h]
+                    \includegraphics[width=\textwidth]{shallow_water1}
+                    \caption{Comparazione dei risultati per la matrice shallow\_water1.}
+                    \label{fig:shallow_water1}
+                \end{figure}
+            \subsection{cfd1}
+                I risultati sulla matrice cfd1 riporati in Figura~\ref{fig:cfd1}
+                mostrano come i risultati più precisi siano ottenuti da Julia,
+                restando in linea con i risultati ottenuti con la matrice
+                shallow\_water1. In questo caso però la quantità di memoria 
+                occupata da Julia è maggiore d quella di Python, che anche nella
+                versione Linux ottiene risultati migliori, pur occupando quattro
+                volte la memoria che occupa nella versione Windows.
+                \begin{figure}[h]
+                    \includegraphics[width=\textwidth]{cfd1}
+                    \caption{Comparazione dei risultati per la matrice cfd1.}
+                    \label{fig:cfd1}
+                \end{figure}
+            \subsection{cfd2}
+                I dati registrati per la matrice cfd2 riportati nella 
+                Figura~\ref{fig:cfd2} non si discostano da quelli delle altre
+                matrici se non per quanto riguarda la memoria utilizzata da
+                MATLAB in ambiente Linux che come già discusso è un errore
+                dovuto probabilmente al calcolo della memoria da parte della 
+                libreria MATLAB. Riulta infatti impossibile che siano stati 
+                allocati più di 18 exabyte di memoria.
+                \begin{figure}[h]
+                    \includegraphics[width=\textwidth]{cfd2}
+                    \caption{Comparazione dei risultati per la matrice cfd2.}
+                    \label{fig:cfd2}
+                \end{figure}
+            \subsection{parabolic\_fem}
+                La Figura~\ref{fig:parabolic_fem} mostra che la matrice è stata
+                fattorizzata solo negli ambienti Julia e Python su entrambi i 
+                sistemi operativi. In particolare i risultati ottentuti da Julia
+                sono più precisi e prodotti pù velocemente, ma la memoria 
+                occupata da Python è minore, specialmente su Windows.
+                \begin{figure}[h]
+                    \includegraphics[width=\textwidth]{parabolic_fem}
+                    \caption{Comparazione dei risultati per la matrice parabolic\_fem.}
+                    \label{fig:parabolic_fem}
+                \end{figure}
+            \subsection{apache2}
+                Come mostrato in Figura~\ref{fig:apache2} a matrice apache2 è 
+                stata fattorizzata in Python, Julia su entrambi i sistemi 
+                operativi testati, inoltre la fattorizzazione è stata possibile
+                anche in MATLAB in ambiente Windows, dove per altro sono stati 
+                ottenuti i risultati più precisi, ma anche i più alti valori di 
+                memoria occupata.
+                \begin{figure}[h]
+                    \includegraphics[width=\textwidth]{apache2}
+                    \caption{Comparazione dei risultati per la matrice apache2.}
+                    \label{fig:apache2}
+                \end{figure}
+            \subsection{G3\_circuit}
+                Osservando i risultati in Figura~\ref{fig:G3_circuit} si può
+                vedere che la matrice G3\_circuit è stata fattorizzata solo in
+                Python e Julia, ottenendo risultati più precisi e veloci in 
+                Julia, ma occupando più memoria che in Python, che specialmente
+                in Windows alloca molti meno byte, ottenendo però i risultati
+                meno precisi.
+                \begin{figure}[h]
+                    \includegraphics[width=\textwidth]{G3_circuit}
+                    \caption{Comparazione dei risultati per la matrice G3\_circuit.}
+                    \label{fig:G3_circuit}
+                \end{figure}
+            \subsection{StocF-1465}
+                La matrice StocF-1465 è stata fattorizzata solo in Julia su 
+                Windows e da Python su Linux. Il grafico in 
+                Figura~\ref{fig:StocF-1465} mostra come l'errore relativo
+                registrato da Julia sia due ordini di grandezza più piccolo di
+                quello registrato in Python, ma l'impatto sulla memoria e i 
+                tempi di calcolo di Python sono più contenuti rispetto a quelli
+                di Julia.
+                \begin{figure}[h]
+                    \includegraphics[width=\textwidth]{StocF-1465}
+                    \caption{Comparazione dei risultati per la matrice StocF-1465.}
+                    \label{fig:StocF-1465}
+                \end{figure}
+            \subsection{Flan\_1565}
+                I risultati in Figura~\ref{fig:Flan_1565} mostrano risultati 
+                simili a quelli ottentuti con la matrice StocF-1465, ancora una 
+                volta Julia ottiene risultati più precisi ma occupando più 
+                spazio in memoria e impiegando più tempo per la fattorizzazione.
+                \begin{figure}[h]
+                    \includegraphics[width=\textwidth]{Flan_1565}
+                    \caption{Comparazione dei risultati per la matrice Flan\_1565.}
+                    \label{fig:Flan_1565}
+                \end{figure}
 
     \chapter{Conclusioni}
         Anzitutto è evidente come gli unici ambienti in cui è stato possibile fattorizzare tutte le matrici sono 
         stati Python e Julia, in particolare solo in sistema Linux per Python e in Windows per Julia. 
         \`E interessante notare che la libreria Python non ha raggiunto gli stessi risultati in fatto di precisione
-        dei risultati nonostante utilizzi per la fattorizzazione la stessa libreria.\\
+        dei risultati nonostante utilizzi per la fattorizzazione la stessa libreria, ovvero cholmod.\\
         Julia risulta essere l'ambiente dove l'errore relativo registrato è minore nella maggior parte 
         dei casi. 
-        Per quanto riguarda i tempi di computazione Julia risulta essere l'ambiente più veloce in quasi ogni caso.\\
+        Per quanto riguarda i tempi di computazione Julia risulta essere l'ambiente più veloce in quasi ogni test.\\
         In generale si può notare come il caso in cui Julia ottiene risultati peggiori rispetto agli altri è quello 
         con la matrice ex15, ovvero la più piccola delle matrici ma anche la più densa, questo potrebbe suggerire 
         che la libreria perda in prestazioni all'aumentare della densità più delle altre, ma maggiori test sarebbero
@@ -319,8 +434,10 @@
         In ambiente Python sono registrati le minori variazioni nella memoria occupata con la maggior parte delle
         matrici testate trovando ancora una volta nella matrice ex15 l'eccezione.\\
         In conclusione Julia sembrerebbe essere l'ambiente più performante sia in termini di tempo di esecuzione che
-        di precisione della soluzione e pur non essendo il meglio ottimizzato nell'utilizzo della memoria risulta
-        essere l'unico ambiente in cui è stato possibile fattorizzare tutte le matrici testate.
+        di precisione della soluzione e pur non essendo il meglio ottimizzato nell'utilizzo della memoria, risulta
+        essere l'unico ambiente in cui è stato possibile fattorizzare tutte le matrici testate con sitema operativo
+        Windows, mentre su Linux con Python è stato possibile fattorizzare tutte le matrici ma ottenendo risultati
+        peggiori in termini di precisione.
 
             
                 
