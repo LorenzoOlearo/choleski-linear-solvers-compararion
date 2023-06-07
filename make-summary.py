@@ -40,7 +40,7 @@ def make_plot(df, host):
         if group[group['library'] == 'org.ejml'].empty == True:
             group = pd.concat([group, pd.DataFrame({'library': ['org.ejml'], 'memory_usage': [0], 'time': [0], 'relative_error': [0]})], ignore_index=True)
             
-        group = group.sort_values(by='library')
+        group = group.sort_values(by=['library', 'platform'], ascending=[True, False], ignore_index=True)
 
         subfig[0].set_title('Time [seconds]')
         sns.barplot(data=group, x='library', y='time', ax=subfig[0], hue='platform', errorbar=None, palette='hls').set_yscale('log')
