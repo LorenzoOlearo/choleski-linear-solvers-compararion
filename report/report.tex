@@ -115,6 +115,8 @@ in termini di tempo di esecuzione, memoria utilizzata e precisione della soluzio
             packet manager \texttt{pip} sui sistemi Windows, il modulo è stato compilato e installato seguendo le
             istruzioni presenti sul 
             \href{https://github.com/xmlyqing00/Cholmod-Scikit-Sparse-Windows}{repository github di xmlqing00}.
+            Inoltre il modulo sksparse.cholmod non è disponibile per Python 3.11
+            ed è quindi necessario utilizzare una versione precedente di Python.
 
             \begin{itemize}
                 \item \href{https://www.scipy.org/}{SciPy}
@@ -141,6 +143,104 @@ in termini di tempo di esecuzione, memoria utilizzata e precisione della soluzio
         I benchmark sono stati eseguiti una volta per ogni ambiente di sviluppo e per ogni matrice, sia in un sistema
         Windows che in un sistema Linux, utilizzando la stessa macchina.
         In particolare è stato utilizzato un processore ad 8 core AMD Ryzen 7 PRO 6850U a 2.70 GHz con 32 GB di RAM.
+
+        \subsection{Requisiti}
+            
+
+        \subsection{Esecuzione}
+            I benchmark sono regolati da uno o più file di configurazione. 
+            Il file \texttt{config.json} contiene un template dei file di 
+            configurazione:
+            \begin{itemize}
+                \item \textbf{matrices\_path}: percorso della cartella che 
+                contiene le matrici.
+                \item \textbf{output\_path}: percorso della cartella dove 
+                saranno salvati i report dei benchmark.
+                \item \textbf{platform}: il sistema operativo utilizzato.
+                Si vuole mantenere questo campo uguale per tutti i benchmark
+                sullo stesso sistema operativo per aggregare correttamente i
+                risultati.
+                \item \textbf{host}: nome del computer utilizzato.
+                Si vuole mantenere questo campo uguale per tutti i benchmark
+                sullo stesso computer per aggregare correttamente i
+                risultati.
+                \item \textbf{matrices}: lista dei nomi dei file delle matrici 
+                da utilizzare nei benchmark. \`E necessario che i nomi dei file
+                comprendano anche l'estensione .mat.
+            \end{itemize}
+
+            Il repository presenta quattro cartelle, una per ogni ambiente di
+            sviluppo, contenenti il codice dei benchmark. I benchmark possono 
+            essere eseguiti singolarmente o tutti insieme utilizzando gli script
+            \texttt{run-benchmark.sh} per Linux e \texttt{run-benchmark.bat} per
+            Windows.
+            
+            Per utilizzare gli script è ncessario avere un file 
+            \texttt{config.json} in ogni cartella del corrispondente linguaggio.
+            Questo è necessario per poter indicare diverse liste di matrici a 
+            seconda del linguaggio. Infatti, per quanto alcuni controlli siano 
+            implementati, non è possibile garantire che un programma non sia 
+            terminato dal sistema operativo per eccessivo utilizzo di memoria.
+            Separando i file di configurazione è quindi possibile rimuovere 
+            dalla lista di matrici quelle che causano errori.
+
+            \subsubsection{MATLAB}
+                Per eseguire i benchmark in MATLAB è necessario spostarsi nella
+                cartella \texttt{matlab} e lanciare in modalità batch lo script
+                main con argomento il file di configurazione. Inoltre è
+                necessario aggiungere una chiamata exit al termine dello script
+                in modo da terminare il processo MATLAB.
+
+\begin{lstlisting}[frame=single]
+> matlab -batch "main('<config-file>'); exit;"
+\end{lstlisting}
+
+            \subsubsection{Java}
+            Per eseguire i benchmark in Java è necessario anziutto generare il
+            file \texttt{.jar} del progetto nel caso non fosse già presente.
+            Per farlo dalla cartella \texttt{java} è sufficiente eseguire i
+            seguenti comandi in Linux:
+
+\begin{lstlisting}[frame=single]
+> cd ./cholesky-linear-solver/
+> mvn clean compile assembly:single
+> cp ./target/cholesky-linear-solver.jar \
+    ../cholesky-linear-solver.jar
+> cd ..
+\end{lstlisting}
+
+            E in Windows:
+
+\begin{lstlisting}[frame=single]
+> cd cholesky-linear-solver\
+> call mvn -B clean package assembly:single
+> copy .\target\cholesky-linear-solver.jar 
+    ..\cholesky-linear-solver.jar
+> cd ..\
+\end{lstlisting}
+
+            Dopo aver generato il file è possibile eseguire i benchmark con il
+            comando:
+
+\begin{lstlisting}[frame=single]
+> java -jar ./cholesky-linear-solver.jar <config-file>
+\end{lstlisting} 
+
+        \subsubsection{Python}
+            Per eseguire i benchmark in Python dalla cartell \texttt{python} è
+            sufficiente eseguire il comando:
+
+\begin{lstlisting}[frame=single]
+> python ./main.py --json <config-file>
+\end{lstlisting}
+
+        \subsubsection{Python}
+            Per eseguire i benchmark in Julia dalla cartell \texttt{julia} è
+            sufficiente eseguire il comando:
+
+\begin{lstlisting}[frame=single]
+> julia ./julia/main.jl <config-file>
+\end{lstlisting}
 
         \subsection{Modalità di misurazione}
 
