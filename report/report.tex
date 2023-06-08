@@ -145,7 +145,26 @@ in termini di tempo di esecuzione, memoria utilizzata e precisione della soluzio
         In particolare è stato utilizzato un processore ad 8 core AMD Ryzen 7 PRO 6850U a 2.70 GHz con 32 GB di RAM.
 
         \subsection{Requisiti}
-            
+
+            Qui sono riportati i requisti necessari all'esecuzione dei benchmark
+            e alla generazione dei report e dei grafici.
+
+            \subsubsection{MATLAB}
+                Per MATLAB è necessaria solo la libreria standard e non sono
+                necessari toolbox aggiuntivi.
+            \subsubsection{Java}
+                Per Java è necessario installare la versione 13 del jdk e maven
+                per gestire le dipendenze del progetto. Le librerie necessarie
+                saranno risolte da maven.
+            \subsubsection{Python}
+                Per Python è necessario installare una verisone di Python 
+                compresa tra la 3.6 e la 3.10 per questioni di compatibilità
+                con la libreria cholmod. Inoltre è necessario installare i
+                pacchetti: numpy, scipy, scikit-sparse, matplotlib, pandas,
+                seaborn, memory-profiler, psutil.
+            \subsubsection{Julia}
+                Per Julia è necessario installare l'enviroment Julia e i 
+                pacchetti aggiuntivi: MAT, JSON, CSV, DataFrames.
 
         \subsection{Esecuzione}
             I benchmark sono regolati da uno o più file di configurazione. 
@@ -227,7 +246,7 @@ in termini di tempo di esecuzione, memoria utilizzata e precisione della soluzio
 \end{lstlisting} 
 
         \subsubsection{Python}
-            Per eseguire i benchmark in Python dalla cartell \texttt{python} è
+            Per eseguire i benchmark in Python dalla cartella \texttt{python} è
             sufficiente eseguire il comando:
 
 \begin{lstlisting}[frame=single]
@@ -235,7 +254,7 @@ in termini di tempo di esecuzione, memoria utilizzata e precisione della soluzio
 \end{lstlisting}
 
         \subsubsection{Python}
-            Per eseguire i benchmark in Julia dalla cartell \texttt{julia} è
+            Per eseguire i benchmark in Julia dalla cartella \texttt{julia} è
             sufficiente eseguire il comando:
 
 \begin{lstlisting}[frame=single]
