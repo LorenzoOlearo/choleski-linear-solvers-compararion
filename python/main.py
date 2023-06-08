@@ -16,6 +16,7 @@ from platform import python_version
 from scipy import __version__ as scipy_version
 
 
+
 @profile 
 def sparse_matrix_solver(A, b):
     try:
@@ -32,11 +33,13 @@ def sparse_matrix_solver(A, b):
     return [x, elapsed]
 
 
+
 def load_sparse_matrix(config, filename):
     mat = sio.loadmat(os.path.join(config['matrices_path'], filename), struct_as_record=False)
     sparse_mat = mat['Problem'][0][0].A
 
     return sparse_mat 
+
 
 
 def main():
@@ -51,7 +54,6 @@ def main():
     parser.add_argument('--json', help='Path to the json config file', default=config_file)
     args = parser.parse_args()
     config_file = args.json
-
 
     with open(config_file, 'r') as f:
         config = json.load(f)
@@ -78,9 +80,7 @@ def main():
         print('Available matrices:' + str(os.listdir(config['matrices_path'])))
         print('Starting computation...')
 
-
         for filename in config['matrices']:
-
                 print('Computing ' + filename)
                 sparse_mat = load_sparse_matrix(config, filename)
 
@@ -89,9 +89,8 @@ def main():
 
                 # Solve the linear system
                 x, elapsed = sparse_matrix_solver(sparse_mat, b)
-
-                mem_usage = memory_usage(-1, interval=.2, timeout=1, backend="psutil")
-                mem_usage = round(np.mean(mem_usage), 2)
+                mem_usage = memory_usage((sparse_matrix_solver, (sparse_mat, b)))
+                mem_usage = round(max(mem_usage))
 
                 # Computes the relative error
                 rel_err = np.linalg.norm(sparse_mat.dot(x) - b) / np.linalg.norm(b)
@@ -108,7 +107,6 @@ def main():
                                  "scipy",
                                  scipy_version])
                 
-                
         end_total = time.time()
         elapsed_total = round(end_total - start_total, 3)
         print('Total time: ' + str(elapsed_total) + ' seconds')
@@ -121,4 +119,3 @@ def main():
     
 if __name__ == '__main__':
     main()
-
