@@ -20,11 +20,11 @@ from scipy import __version__ as scipy_version
 @profile 
 def sparse_matrix_solver(A, b):
     try:
-        start = time.time_ns()
+        start = time.time()
         factor = cholesky(A)
-        end = time.time_ns()
-        elapsed = round(end - start, 3) / 10e3
         x = factor(b)
+        end = time.time()
+        elapsed = round(end - start, 3) 
     except Exception as e:
         print('Cholesky decomposition failed:' + str(e))
         x = np.zeros(A.shape[0])
@@ -84,7 +84,6 @@ def main():
                 print('Computing ' + filename)
                 sparse_mat = load_sparse_matrix(config, filename)
 
-                # TEMPORARY: will be later replaced the proper b vector
                 b = np.ones(sparse_mat.shape[0])
 
                 # Solve the linear system
@@ -92,7 +91,7 @@ def main():
                 mem_usage = memory_usage((sparse_matrix_solver, (sparse_mat, b)))
                 mem_usage = round(max(mem_usage))
 
-                # Computes the relative error
+                # Compute the relative error
                 rel_err = np.linalg.norm(sparse_mat.dot(x) - b) / np.linalg.norm(b)
                 
                 writer.writerow([filename,
@@ -114,7 +113,7 @@ def main():
     
     report_df = pd.read_csv(output_file_path, sep=',')
     print(report_df)
-
+    
     
     
 if __name__ == '__main__':

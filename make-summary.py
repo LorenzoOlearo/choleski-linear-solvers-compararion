@@ -44,7 +44,6 @@ def make_plot(df, host):
 
         subfig[0].set_title('Time [seconds]')
         sns.barplot(data=group, x='library', y='time', ax=subfig[0], hue='platform', errorbar=None, palette='hls').set_yscale('log')
-        a = 1
         subfig[0].set_xticklabels(['Julia-LinearAlgebra', 'MATLAB', 'Java-ejml', 'Python-scipy'], rotation=15)
         for p in subfig[0].patches:
             subfig[0].annotate(format(p.get_height(), '.2f'), (p.get_x() + p.get_width() / 2., p.get_height()), ha='center', va='center', xytext=(0, 10), textcoords='offset points')
