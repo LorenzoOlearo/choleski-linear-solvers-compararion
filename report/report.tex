@@ -126,7 +126,7 @@ questo documento rimane una problematica non risolta.
 \end{itemize}
 
 \subsection{Python}
-La libreria SciPy è stata utilizzata per per le matrici sparese insieme a
+La libreria SciPy è stata utilizzata per per le matrici sparse insieme a
 scikit-sparse per la fattorizzazione di Cholesky.
 SciPy offre inoltre le funzionalità per la lettura dei file \texttt{.mat}.
 La fattorizzazione di Cholesky è implementata dal modulo sksparse.cholmod,
@@ -402,7 +402,7 @@ apache2.mat         & 715176 & 4817870 & 646.19 & 27490.58
 & 3.65750E-11 & WINDOWS & 9.13.0.2193358 (R2022b) Update 5 \\ \bottomrule
 \end{tabular}%
 }
-\caption{Risultati dei benchmark MATLAB}
+\caption{Risultati dei benchmark MATLAB.}
 \label{tab:result_matlab}
 \end{table}
 \subsubsection{Java}
@@ -446,7 +446,7 @@ cfd2.mat            & 123440 & 3085406 & 121.14 & 1928.13
 & 2.19321E-11 & WINDOWS & 0.43 \\ \bottomrule
 \end{tabular}%
 }
-\caption{Risultati dei benchmark Java}
+\caption{Risultati dei benchmark Java.}
 \label{tab:result_java}
 \end{table}
 \subsubsection{Python}
@@ -466,55 +466,55 @@ fattorizzazione il processo lanciava diversi thread come se stesse effettuando
 una parallelizzazione fino ad arrivare a saturare tutti e 16 i core a
 disposizione, questo però non è stato osservato in ambiente Windows.
 \begin{table}[ht]
-\centering
-\resizebox{\columnwidth}{!}{%
-\begin{tabular}{@{}lrrrrrcc@{}}
-\toprule
-\textbf{A} &
-\textbf{size} &
-\textbf{NNZ} &
-\textbf{time {[}s{]}} &
-\textbf{memory\_usage {[}MB{]}} &
-\textbf{relative\_error} &
-\textbf{platform} &
-\textbf{library\_version} \\ \midrule
-ex15.mat            & 6867    & 98671     & 0.94   & 726.99
-& 3.49945E-07 & LINUX   & 1.8.1  \\
-ex15.mat            & 6867    & 98671     & 0.02   & 78.57
-& 3.97177E-07 & WINDOWS & 1.10.1 \\
-shallow\_water1.mat & 81920   & 327680    & 4.00   & 726.99
-& 3.27712E-16 & LINUX   & 1.8.1  \\
-shallow\_water1.mat & 81920   & 327680    & 0.69   & 84.01
-& 3.75545E-16 & WINDOWS & 1.10.1 \\
-cfd1.mat            & 70656   & 1825580   & 3.62   & 499.01
-& 1.11282E-11 & LINUX   & 1.8.1  \\
-cfd1.mat            & 70656   & 1825580   & 45.51  & 105.17
-& 2.47670E-11 & WINDOWS & 1.10.1 \\
-cfd2.mat            & 123440  & 3085406   & 8.65   & 499.15
-& 1.65638E-11 & LINUX   & 1.8.1  \\
-cfd2.mat            & 123440  & 3085406   & 130.17 & 121.55
-& 3.41646E-11 & WINDOWS & 1.10.1 \\
-parabolic\_fem.mat  & 525825  & 3674625   & 19.52  & 726.99
-& 1.91515E-11 & LINUX   & 1.8.1  \\
-parabolic\_fem.mat  & 525825  & 3674625   & 22.07  & 144.30
-& 2.35390E-11 & WINDOWS & 1.10.1 \\
-apache2.mat         & 715176  & 4817870   & 82.83  & 551.96
-& 1.70028E-10 & LINUX   & 1.8.1  \\
-apache2.mat         & 715176  & 4817870   & 270.27 & 171.90
-& 2.24076E-10 & WINDOWS & 1.10.1 \\
-G3\_circuit.mat     & 1585478 & 7660826   & 87.47  & 785.36
-& 3.34037E-11 & LINUX   & 1.8.1  \\
-G3\_circuit.mat     & 1585478 & 7660826   & 328.09 & 244.55
-& 5.82245E-11 & WINDOWS & 1.10.1 \\
-StocF-1465.mat      & 1465137 & 21005389  & 376.75 & 739.66
-& 1.89743E-08 & LINUX   & 1.8.1  \\
-Flan\_1565.mat      & 1564794 & 114165372 & 447.43 & 1893.95
-& 5.33502E-10 & LINUX   & 1.8.1  \\ \bottomrule
-\end{tabular}%
-}
-\caption{Risultati dei benchmark Python}
-\label{tab:result_python}
-\end{table}
+  \centering
+  \resizebox{\columnwidth}{!}{%
+  \begin{tabular}{@{}lrrrrrcc@{}}
+  \hline
+  \textbf{A} &
+    \textbf{size} &
+    \textbf{NNZ} &
+    \textbf{time {[}s{]}} &
+    \textbf{memory\_usage {[}MB{]}} &
+    \textbf{relative\_error} &
+    \multicolumn{1}{c}{\textbf{platform}} &
+    \multicolumn{1}{c}{\textbf{library\_version}} \\ \hline
+  ex15.mat            & 6867    & 98671     & 0.27   & 500.00
+  & 3.49945E-07 & LINUX   & 1.8.1  \\
+  ex15.mat            & 6867    & 98671     & 0.04   & 87.00
+  & 3.97177E-07 & WINDOWS & 1.10.1 \\
+  shallow\_water1.mat & 81920   & 327680    & 10.18  & 501.00
+  & 3.27712E-16 & LINUX   & 1.8.1  \\
+  shallow\_water1.mat & 81920   & 327680    & 0.74   & 130.00
+  & 3.75545E-16 & WINDOWS & 1.10.1 \\
+  cfd1.mat            & 70656   & 1825580   & 2.93   & 686.00
+  & 1.11282E-11 & LINUX   & 1.8.1  \\
+  cfd1.mat            & 70656   & 1825580   & 38.41  & 485.00
+  & 2.47670E-11 & WINDOWS & 1.10.1 \\
+  cfd2.mat            & 123440  & 3085406   & 14.71  & 853.00
+  & 1.65638E-11 & LINUX   & 1.8.1  \\
+  cfd2.mat            & 123440  & 3085406   & 123.30 & 865.00
+  & 3.41646E-11 & WINDOWS & 1.10.1 \\
+  parabolic\_fem.mat  & 525825  & 3674625   & 23.58  & 975.00
+  & 1.91515E-11 & LINUX   & 1.8.1  \\
+  parabolic\_fem.mat  & 525825  & 3674625   & 18.54  & 582.00
+  & 2.35390E-11 & WINDOWS & 1.10.1 \\
+  apache2.mat         & 715176  & 4817870   & 65.47  & 1889.00
+  & 1.70028E-10 & LINUX   & 1.8.1  \\
+  apache2.mat         & 715176  & 4817870   & 262.48 & 1989.00
+  & 2.24076E-10 & WINDOWS & 1.10.1 \\
+  G3\_circuit.mat     & 1585478 & 7660826   & 94.44  & 1706.00
+  & 3.34037E-11 & LINUX   & 1.8.1  \\
+  G3\_circuit.mat     & 1585478 & 7660826   & 338.93 & 2357.00
+  & 5.82245E-11 & WINDOWS & 1.10.1 \\
+  StocF-1465.mat      & 1465137 & 21005389  & 357.17 & 10633.00
+  & 1.89743E-08 & LINUX   & 1.8.1  \\
+  Flan\_1565.mat      & 1564794 & 114165372 & 505.37 & 15889.00
+  & 5.33502E-10 & LINUX   & 1.8.1  \\ \hline
+  \end{tabular}%
+  }
+  \caption{Risultati dei benchmark Python.}
+  \label{tab:result_python}
+  \end{table}
 
 \subsubsection{Julia}
 La Tabella~\ref{tab:result_julia} riporta i risultati ottenuti utilizzando Julia.
@@ -569,7 +569,7 @@ Flan\_1565.mat      & 1564794 & 114165372 & 538.93 & 43646.98
 & 1.67777E-12 & WINDOWS & 1.9.0 \\ \bottomrule
 \end{tabular}%
 }
-\caption{Risultati dei benchmark Julia}
+\caption{Risultati dei benchmark Julia.}
 \label{tab:result_julia}
 \end{table}
 
