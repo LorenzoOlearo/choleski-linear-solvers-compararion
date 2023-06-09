@@ -85,6 +85,19 @@ source che presenta le migliori prestazioni in termini di tempo di esecuzione,
 memoria utilizzata e precisione della soluzione.}
 
 \vspace{12pt}
+\begin{shaded}
+Tutto il codice sorgente per la realizzazione del progetto comprendente
+consegne, test, esperimenti, grafici, dati e relazione è stato pubblicato al
+seguente repository GitHub:
+\url{https://github.com/LorenzoOlearo/cholesky-linear-solvers-comparison}.
+Il repository rimarrà privato fino alla data dell'esame, per avere l'accesso, le
+chiediamo per ragioni tecniche di comunicarcelo via mail.
+\end{shaded}
+
+\renewcommand{\contentsname}{Indice dei contenuti}
+\newpage
+\tableofcontents
+\newpage
 
 \section[Enviroments]{Ambienti di sviluppo}
 Sono qui riportati i dettagli riguardo gli ambienti di sviluppo utilizzati,
@@ -113,7 +126,7 @@ questo documento rimane una problematica non risolta.
 \end{itemize}
 
 \subsection{Python}
-La libreria SciPy è stata utilizzata per per le matrici sparse insieme a
+La libreria SciPy è stata utilizzata per per le matrici sparese insieme a
 scikit-sparse per la fattorizzazione di Cholesky.
 SciPy offre inoltre le funzionalità per la lettura dei file \texttt{.mat}.
 La fattorizzazione di Cholesky è implementata dal modulo sksparse.cholmod,
@@ -164,6 +177,7 @@ $b = A*xe$ con $xe$ vettore di tutti 1.
   \item \textbf{TIME}: il tempo computazionale è calcolato come differenza tra
   l'istante temporale in cui il calcolatore termina la risoluzione del sistema
   lineare e l'istante in ciu la inizia.
+
   \item \textbf{MEMORY USAGE}: la memoria utilizzata è stimata come la
   differenza tra la memoria occupata dal processo prima dell'esecuzione e il
   picco massimo di memoria durante l'esecuzione.
@@ -175,6 +189,7 @@ $b = A*xe$ con $xe$ vettore di tutti 1.
   il profiling potrebbe variare e misurare in modo diverso la memoria, in
   particolare tra sistemi operativi diversi anche lo stesso linguaggio potrebbe
   presentare implementazioni differenti come nel caso di MATLAB.
+
   \item \textbf{RELATIVE ERROR}: l'errore relativo è calcolato come
   $||x-xe||/||xe||$, ovvero la norma della differenza tra la soluzione ottentuta
   con la decomposizione di Cholesky e il vettore di riferimento tutti $1$.
@@ -267,8 +282,7 @@ ambiente di sviluppo. I benchmark possono essere eseguiti singolarmente,
 lanciando l'ambiente desiderato, o tutti insieme utilizzando gli script
 \texttt{run-benchmark.sh} per Linux e \texttt{run-benchmark.bat} per Windows. Si
 tenga presente che per poter eseguire correttamente questi script è necessario
-che tutti gli ambienti di cui si intende fare il benchmark siano nel PATH di
-sistema.
+che tutti gli ambienti siano nel PATH di sistema.
 
 Per utilizzare gli script è necessario avere un file \texttt{config.json} in
 ogni cartella del corrispondente linguaggio.
@@ -369,19 +383,19 @@ introdotti miglioramenti sulle altre matrici
 \textbf{platform} &
 \textbf{library\_version} \\ \midrule
 ex15.mat            & 6867   & 98671   & 0.05   & 4.19
-& 8.21380E-07 & Linux   & 9.14.0.2254940 (R2023a) Update 2 \\
+& 8.21380E-07 & LINUX   & 9.14.0.2254940 (R2023a) Update 2 \\
 ex15.mat            & 6867   & 98671   & 0.06   & 4.15
 & 8.21380E-07 & WINDOWS & 9.13.0.2193358 (R2022b) Update 5 \\
 shallow\_water1.mat & 81920  & 327680  & 1.72   & 368.87
-& 3.07689E-16 & Linux   & 9.14.0.2254940 (R2023a) Update 2 \\
+& 3.07689E-16 & LINUX   & 9.14.0.2254940 (R2023a) Update 2 \\
 shallow\_water1.mat & 81920  & 327680  & 2.09   & 368.93
 & 3.07689E-16 & WINDOWS & 9.13.0.2193358 (R2022b) Update 5 \\
 cfd1.mat            & 70656  & 1825580 & 3.86   & 1286.22
-& 6.34538E-13 & Linux   & 9.14.0.2254940 (R2023a) Update 2 \\
+& 6.34538E-13 & LINUX   & 9.14.0.2254940 (R2023a) Update 2 \\
 cfd1.mat            & 70656  & 1825580 & 6.54   & 1302.86
 & 6.34538E-13 & WINDOWS & 9.13.0.2193358 (R2022b) Update 5 \\
 cfd2.mat            & 123440 & 3085406 & 6.55   & 18446744
-& 7.98365E-13 & Linux   & 9.14.0.2254940 (R2023a) Update 2 \\
+& 7.98365E-13 & LINUX   & 9.14.0.2254940 (R2023a) Update 2 \\
 cfd2.mat            & 123440 & 3085406 & 13.07  & 2503.08
 & 7.98365E-13 & WINDOWS & 9.13.0.2193358 (R2022b) Update 5 \\
 apache2.mat         & 715176 & 4817870 & 646.19 & 27490.58
@@ -393,8 +407,8 @@ apache2.mat         & 715176 & 4817870 & 646.19 & 27490.58
 \end{table}
 \subsubsection{Java}
 Osservando i risultati nella Tabella~\ref{tab:result_java} si può notare come
-l'errore relativo e la memoria utilizzata per ogni matrice siano uguali o molto
-vicini tra i due sistemi operativi, mentre il tempo di computazione sia più
+l'errore relativo e la memoria utilizzata per ogni matrice sono uguali o molto
+vicini tra i due sistemi operativi, mentre il tempo di computazione è più
 variabile seppur non discostandosi molto.\\
 Le matrici fattorizzate nei due sistemi operativi sono le stesse in quanto i
 limiti non derivano tanto dal memoria disponibile quanto dai limiti della
@@ -415,19 +429,19 @@ non è quindi in grado di gestire matrici con più di $2^{31}$ elementi.
 \textbf{platform} &
 \textbf{library\_version} \\ \midrule
 ex15.mat            & 6867   & 98671   & 0.01   & 5.12
-& 8.00799E-07 & Linux   & 0.43 \\
+& 8.00799E-07 & LINUX   & 0.43 \\
 ex15.mat            & 6867   & 98671   & 0.01   & 5.01
 & 8.00799E-07 & WINDOWS & 0.43 \\
 shallow\_water1.mat & 81920  & 327680  & 10.42  & 290.06
-& 3.55914E-16 & Linux   & 0.43 \\
+& 3.55914E-16 & LINUX   & 0.43 \\
 shallow\_water1.mat & 81920  & 327680  & 8.96   & 291.21
 & 3.55914E-16 & WINDOWS & 0.43 \\
 cfd1.mat            & 70656  & 1825580 & 76.96  & 992.04
-& 4.52430E-11 & Linux   & 0.43 \\
+& 4.52430E-11 & LINUX   & 0.43 \\
 cfd1.mat            & 70656  & 1825580 & 119.12 & 991.02
 & 4.52430E-11 & WINDOWS & 0.43 \\
 cfd2.mat            & 123440 & 3085406 & 121.92 & 1927.05
-& 2.19321E-11 & Linux   & 0.43 \\
+& 2.19321E-11 & LINUX   & 0.43 \\
 cfd2.mat            & 123440 & 3085406 & 121.14 & 1928.13
 & 2.19321E-11 & WINDOWS & 0.43 \\ \bottomrule
 \end{tabular}%
@@ -465,37 +479,37 @@ disposizione, questo però non è stato osservato in ambiente Windows.
 \textbf{platform} &
 \textbf{library\_version} \\ \midrule
 ex15.mat            & 6867    & 98671     & 0.94   & 726.99
-& 3.49945E-07 & Linux   & 1.8.1  \\
+& 3.49945E-07 & LINUX   & 1.8.1  \\
 ex15.mat            & 6867    & 98671     & 0.02   & 78.57
 & 3.97177E-07 & WINDOWS & 1.10.1 \\
 shallow\_water1.mat & 81920   & 327680    & 4.00   & 726.99
-& 3.27712E-16 & Linux   & 1.8.1  \\
+& 3.27712E-16 & LINUX   & 1.8.1  \\
 shallow\_water1.mat & 81920   & 327680    & 0.69   & 84.01
 & 3.75545E-16 & WINDOWS & 1.10.1 \\
 cfd1.mat            & 70656   & 1825580   & 3.62   & 499.01
-& 1.11282E-11 & Linux   & 1.8.1  \\
+& 1.11282E-11 & LINUX   & 1.8.1  \\
 cfd1.mat            & 70656   & 1825580   & 45.51  & 105.17
 & 2.47670E-11 & WINDOWS & 1.10.1 \\
 cfd2.mat            & 123440  & 3085406   & 8.65   & 499.15
-& 1.65638E-11 & Linux   & 1.8.1  \\
+& 1.65638E-11 & LINUX   & 1.8.1  \\
 cfd2.mat            & 123440  & 3085406   & 130.17 & 121.55
 & 3.41646E-11 & WINDOWS & 1.10.1 \\
 parabolic\_fem.mat  & 525825  & 3674625   & 19.52  & 726.99
-& 1.91515E-11 & Linux   & 1.8.1  \\
+& 1.91515E-11 & LINUX   & 1.8.1  \\
 parabolic\_fem.mat  & 525825  & 3674625   & 22.07  & 144.30
 & 2.35390E-11 & WINDOWS & 1.10.1 \\
 apache2.mat         & 715176  & 4817870   & 82.83  & 551.96
-& 1.70028E-10 & Linux   & 1.8.1  \\
+& 1.70028E-10 & LINUX   & 1.8.1  \\
 apache2.mat         & 715176  & 4817870   & 270.27 & 171.90
 & 2.24076E-10 & WINDOWS & 1.10.1 \\
 G3\_circuit.mat     & 1585478 & 7660826   & 87.47  & 785.36
-& 3.34037E-11 & Linux   & 1.8.1  \\
+& 3.34037E-11 & LINUX   & 1.8.1  \\
 G3\_circuit.mat     & 1585478 & 7660826   & 328.09 & 244.55
 & 5.82245E-11 & WINDOWS & 1.10.1 \\
 StocF-1465.mat      & 1465137 & 21005389  & 376.75 & 739.66
-& 1.89743E-08 & Linux   & 1.8.1  \\
+& 1.89743E-08 & LINUX   & 1.8.1  \\
 Flan\_1565.mat      & 1564794 & 114165372 & 447.43 & 1893.95
-& 5.33502E-10 & Linux   & 1.8.1  \\ \bottomrule
+& 5.33502E-10 & LINUX   & 1.8.1  \\ \bottomrule
 \end{tabular}%
 }
 \caption{Risultati dei benchmark Python}
@@ -522,31 +536,31 @@ In ambiente Windows è stato inoltre possibile fattorizzare tutte le matrici.
 \textbf{platform} &
 \textbf{library\_version} \\ \midrule
 ex15.mat            & 6867    & 98671     & 0.03   & 11.48
-& 5.81497E-07 & Linux   & 1.9.0 \\
+& 5.81497E-07 & LINUX   & 1.9.0 \\
 ex15.mat            & 6867    & 98671     & 0.02   & 11.48
 & 5.81497E-07 & WINDOWS & 1.9.0 \\
 shallow\_water1.mat & 81920   & 327680    & 0.55   & 75.02
-& 2.01653E-16 & Linux   & 1.9.0 \\
+& 2.01653E-16 & LINUX   & 1.9.0 \\
 shallow\_water1.mat & 81920   & 327680    & 0.15   & 75.02
 & 2.01653E-16 & WINDOWS & 1.9.0 \\
 cfd1.mat            & 70656   & 1825580   & 1.49   & 540.85
-& 7.06626E-14 & Linux   & 1.9.0 \\
+& 7.06626E-14 & LINUX   & 1.9.0 \\
 cfd1.mat            & 70656   & 1825580   & 1.59   & 540.36
 & 6.17525E-14 & WINDOWS & 1.9.0 \\
 cfd2.mat            & 123440  & 3085406   & 2.66   & 1019.36
-& 3.07576E-13 & Linux   & 1.9.0 \\
+& 3.07576E-13 & LINUX   & 1.9.0 \\
 cfd2.mat            & 123440  & 3085406   & 2.34   & 1019.36
 & 2.74264E-13 & WINDOWS & 1.9.0 \\
 parabolic\_fem.mat  & 525825  & 3674625   & 3.40   & 771.37
-& 7.12844E-13 & Linux   & 1.9.0 \\
+& 7.12844E-13 & LINUX   & 1.9.0 \\
 parabolic\_fem.mat  & 525825  & 3674625   & 2.05   & 771.37
 & 7.10019E-13 & WINDOWS & 1.9.0 \\
 apache2.mat         & 715176  & 4817870   & 7.99   & 2346.68
-& 5.60339E-11 & Linux   & 1.9.0 \\
+& 5.60339E-11 & LINUX   & 1.9.0 \\
 apache2.mat         & 715176  & 4817870   & 6.52   & 2346.68
 & 5.60359E-11 & WINDOWS & 1.9.0 \\
 G3\_circuit.mat     & 1585478 & 7660826   & 12.46  & 3070.81
-& 4.88705E-12 & Linux   & 1.9.0 \\
+& 4.88705E-12 & LINUX   & 1.9.0 \\
 G3\_circuit.mat     & 1585478 & 7660826   & 8.60   & 3070.81
 & 4.88457E-12 & WINDOWS & 1.9.0 \\
 StocF-1465.mat      & 1465137 & 21005389  & 483.85 & 39483.77
@@ -577,7 +591,7 @@ degli altri tra sistemi Windows e Linux.
 \end{figure}
 \subsubsection{shallow\_water1}
 Come mostrato in Figura~\ref{fig:shallow_water1} Julia ottiene i migliori
-risultati in tutte le matriche, è infatti l'ambiente più veloce e preciso
+risultati in tutte le metriche, è infatti l'ambiente più veloce e preciso
 utilizzando meno memoria di tutti gli altri linguaggi. Anche per questa matrice
 i risultati con Python sono quelli dove il cambio di sistema operativo porta la
 maggiore differenza, in particolare per quelli che sono i tempi di calcolo e
@@ -602,7 +616,7 @@ memoria che occupa nella versione Windows.
 \subsubsection{cfd2}
 I dati registrati per la matrice cfd2 riportati nella Figura~\ref{fig:cfd2} non
 si discostano da quelli delle altre matrici se non per quanto riguarda la
-memoria utilizzata da MATLAB in ambiente Linux, come già discusso è un errore
+memoria utilizzata da MATLAB in ambiente Linux, come già discusso, è un errore
 dovuto probabilmente al calcolo della memoria da parte della libreria MATLAB.
 Risulta infatti impossibile che siano stati allocati più di $18$ exabyte di
 memoria.
