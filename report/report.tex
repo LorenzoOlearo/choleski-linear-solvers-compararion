@@ -1,0 +1,694 @@
+\documentclass[a4paper, 12pt]{article}
+
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{booktabs}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lipsum}
+\usepackage{parskip}
+\usepackage[a4paper,width=150mm,top=25mm,bottom=25mm]{geometry}
+
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{subcaption}
+\captionsetup{width=0.8\textwidth}
+
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset{
+  basicstyle=\ttfamily,
+  columns=fullflexible,
+  breaklines=true,
+  postbreak=\raisebox{0ex}[0ex][0ex]{\color{red}$\hookrightarrow$\space},
+  keepspaces,
+  language=Bash,
+  showtabs=true,
+}
+
+\usepackage[noframe]{showframe}
+\usepackage{framed}
+\renewenvironment{shaded}{%
+  \def\FrameCommand{\fboxsep=\FrameSep \colorbox{shadecolor}}%
+  \MakeFramed{\advance\hsize-\width \FrameRestore\FrameRestore}}%
+ {\endMakeFramed}
+ \definecolor{shadecolor}{gray}{0.90}
+
+ \usepackage{hyperref}
+ \hypersetup{
+   colorlinks=false,
+   pdftitle={Comparazione di librerie per la fattorizzazione di Cholesky}
+ }
+
+ \usepackage[T1]{fontenc}
+\usepackage{titlesec,  color}
+\usepackage{fix-cm}
+\makeatletter
+\newcommand\HUGE{\@setfontsize\Huge{50}{60}}
+\makeatother
+\titleformat{\chapter}
+	{\scshape\LARGE\bfseries\HUGE}
+	{\makebox[6pc][l]{\HUGE\thechapter\hfil\rule[-4pt]{0.5pt}{2pc}}}
+	{0pt}
+	{\LARGE}
+	\titlespacing*{\chapter}{0pt}{0pt}{24pt}
+
+
+\graphicspath{{./imgs}}
+
+\title{
+  \textsc{\textbf{Comparazione di librerie per la fattorizzazione di Cholesky}}
+}
+
+\author{
+  \begin{tabular}{cc}
+    Lorenzo Olearo & Alessandro Riva \\
+    \href{mailto:l.olearo@campus.unimib.it}
+    {\texttt{\small{l.olearo@campus.unimib.it}}} &
+    \href{mailto:a.riva86@campus.unimib.it}
+    {\texttt{\small{\quad a.riva86@campus.unimib.it}}}
+  \end{tabular}
+}
+
+\date{A.A. 2022-2023}
+
+\begin{document}
+
+\maketitle
+
+\textit{Il progetto consiste nella comparazione delle prestazioni di alcuni
+ambienti di sviluppo per quanto riguarda la fattorizzazione di Cholesky di
+matrici sparse. L'obiettivo è quello di individuare l'ambiente di sviluppo open
+source che presenta le migliori prestazioni in termini di tempo di esecuzione,
+memoria utilizzata e precisione della soluzione.}
+
+\vspace{12pt}
+
+\section[Enviroments]{Ambienti di sviluppo}
+Sono qui riportati i dettagli riguardo gli ambienti di sviluppo utilizzati,
+dividendo per linguaggio di programmazione le informazioni sulle librerie
+utilizzate.
+
+\subsection{MATLAB}
+MATLAB supporta nativamente le matrici sparse e la fattorizzazione di Cholesky.
+Il metodo \texttt{chol} è stato utilizzato per calcolare la fattorizzazione e
+l'operatore \verb$\$ per risolvere il sistema lineare.
+
+\subsection{Java}
+La libreria Java EJML è stata utilizzata per la rappresentazione sparsa delle
+matrici e per la fattorizzazione di Cholesky.
+I file \texttt{.mat} sono stati caricati con l'aiuto della libreria MFL.
+Risulta importante notare la presenza di alcune limitazioni nella libreria EJML,
+tra le quali la più importante è l'impossibilità di applicare la fattorizzazione
+di Cholesky su matrici di grandi dimensioni a causa dell'utilizzo di interi
+per l'indicizzazione degli array.
+Questa limitazione è nota agli sviluppatori ma al momento della stesura di
+questo documento rimane una problematica non risolta.
+
+\begin{itemize}
+\item \href{http://ejml.org/}{EJML}
+\item \href{https://github.com/HebiRobotics/MFL}{MFL}
+\end{itemize}
+
+\subsection{Python}
+La libreria SciPy è stata utilizzata per per le matrici sparse insieme a
+scikit-sparse per la fattorizzazione di Cholesky.
+SciPy offre inoltre le funzionalità per la lettura dei file \texttt{.mat}.
+La fattorizzazione di Cholesky è implementata dal modulo sksparse.cholmod,
+che a sua volta si basa sulla libreria open source cholmod, scritta in C e
+parte di SuiteSparse.
+\`E da segnalare la mancaza del modulo sksparse.cholmod, necessario per la
+fattorizzazione, tramite il packet manager \texttt{pip} sui sistemi Windows,
+il modulo è stato compilato e installato seguendo le istruzioni presenti sul
+\href{https://github.com/xmlyqing00/Cholmod-Scikit-Sparse-Windows}
+{repository github di xmlqing00}.
+Inoltre il modulo sksparse.cholmod non è compatibile con Python 3.11
+ed è quindi necessario utilizzare una versione precedente di Python.
+E\` testata con successo la versione 3.9.
+
+\begin{itemize}
+\item \href{https://www.scipy.org/}{SciPy}
+\item \href{https://github.com/scikit-sparse/scikit-sparse} {scikit-sparse}
+\item \href{http://suitesparse.com}{SuiteSparse}
+\end{itemize}
+
+\subsection{Julia}
+Il package SparseArrays mette a disposizione le classi per le matrici sparse,
+mentre la fattorizzazione di Cholesky è implementata dal package LinearAlgebra.
+Il package MAT è stato utilizzato per la lettura dei file \texttt{.mat}.
+L'implementazione della fattorizzazione di Cholesky del package LinearAlgebra
+si basa sulla libreria cholmod della suite di librerie SuiteSparse.
+
+\begin{itemize}
+\item \href{https://docs.julialang.org/en/v1/stdlib/SparseArrays/}{SparseArrays}
+\item \href{https://docs.julialang.org/en/v1/stdlib/LinearAlgebra/}
+{LinearAlgebra}
+\item \href{https://github.com/JuliaIO/MAT.jl}{MAT}
+\item \href{http://suitesparse.com}{SuiteSparse}
+\end{itemize}
+
+\section{Benchmarks}
+I benchmark sono stati eseguiti una volta per ogni ambiente di sviluppo e per
+ogni matrice, sia in un sistema Windows (11) che in un sistema Linux (Ubuntu
+22.10), utilizzando la stessa macchina. In particolare è stato utilizzato un
+processore ad 8+8 core AMD Ryzen 7 PRO 6850U a 2.70 GHz con 32 GB di RAM.
+
+\subsection{Modalità di misurazione}
+Le misurazioni sono effettuate sulla risoluzione tramite il metodo di Cholesky
+del sistema $Ax = b$ dove il termine noto $b$ è calcolato in modo tale che
+$b = A*xe$ con $xe$ vettore di tutti 1.
+
+\begin{itemize}
+  \item \textbf{TIME}: il tempo computazionale è calcolato come differenza tra
+  l'istante temporale in cui il calcolatore termina la risoluzione del sistema
+  lineare e l'istante in ciu la inizia.
+  \item \textbf{MEMORY USAGE}: la memoria utilizzata è stimata come la
+  differenza tra la memoria occupata dal processo prima dell'esecuzione e il
+  picco massimo di memoria durante l'esecuzione.
+  A causa della natura degli ambienti utilizzati la misurazione della memoria
+  può essere difficile e risultare particolarmente inaccurata.
+  In particolare Java, essendo eseguito in una virtual machine e utilizzando un
+  garbage collector potrebbe produrre risultati poco affidabili.\\
+  Inoltre, a seconda dell'ambiente, l'implementazione delle funzioni native per
+  il profiling potrebbe variare e misurare in modo diverso la memoria, in
+  particolare tra sistemi operativi diversi anche lo stesso linguaggio potrebbe
+  presentare implementazioni differenti come nel caso di MATLAB.
+  \item \textbf{RELATIVE ERROR}: l'errore relativo è calcolato come
+  $||x-xe||/||xe||$, ovvero la norma della differenza tra la soluzione ottentuta
+  con la decomposizione di Cholesky e il vettore di riferimento tutti $1$.
+  Il vettore dei temini noti $b$ è calcolato come $b = A*xe$ in ciascun
+  ambiente. Per quanto i vettori così calcolati siano in generale affidabili,
+  potrebbero presentare delle differenze tra i diversi ambienti per quanto
+  riguarda la precisione della soluzione. Un approccio più preciso sarebbe stato
+  quello di utilizzare lo stesso vettore precalcolato per tutti gli ambienti.
+\end{itemize}
+
+\subsection{Matrici}
+Sono state utilizzate per i benchmark nove matrici sparse messe a disposizione
+sul sito web \href{https://sparse.tamu.edu/}{The SuiteSparse Matrix Collection}.
+Le matrici sono di diverse dimensioni e densità. In particolare in
+Tabella~\ref{tab:matrices} sono riportati i dettagli delle matrici utilizzate.
+
+\begin{table}[ht]
+\centering
+
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+\textbf{Nome}
+& \textbf{Dimensione} & \textbf{Nonzero} & \textbf{Densità} \\
+\midrule
+\href{https://sparse.tamu.edu/FIDAP/ex15}{ex15}
+& 6\,867         & 98\,671          & 0.2092\%         \\
+\href{https://sparse.tamu.edu/MaxPlanck/shallow_water1}{shallow\_water1}
+& 81\,920        & 327\,680         & 0.0049\%         \\
+\href{https://sparse.tamu.edu/Rothberg/cfd1}{cfd1}
+& 70\,656        & 1\,825\,580      & 0.0366\%         \\
+\href{https://sparse.tamu.edu/Rothberg/cfd2}{cfd2}
+& 123\,440       & 3\,085\,406      & 0.0202\%         \\
+\href{https://sparse.tamu.edu/Wissgott/parabolic_fem}{parabolic\_fem}
+& 525\,825       & 3\,674\,625      & 0.0013\%         \\
+\href{https://sparse.tamu.edu/GHS_psdef/apache2}{apache2}
+& 715\,176       & 4\,817\,870      & 0.0009\%         \\
+\href{https://sparse.tamu.edu/AMD/G3_circuit}{G3\_circuit}
+& 1\,585\,478    & 7\,660\,826      & 0.0003\%         \\
+\href{https://sparse.tamu.edu/Janna/StocF-1465}{StocF-1465}
+& 1\,465\,137    & 21\,005\,389     & 0.0010\%         \\
+\href{https://sparse.tamu.edu/Janna/Flan_1565}{Flan\_1565}
+& 1\,564\,794    & 114\,165\,372    & 0.0047\%         \\
+\bottomrule
+\end{tabular}%
+
+\caption{Sommario delle matrici utilizzate nei benchmark.}
+\label{tab:matrices}
+\end{table}
+
+\subsection{Requisiti}
+Qui sono riportati i requisti necessari all'esecuzione dei benchmark e alla
+generazione dei report e dei grafici.
+
+\subsubsection{MATLAB}
+Per MATLAB è necessaria solo la libreria standard e non sono necessari toolbox
+aggiuntivi.
+\subsubsection{Java}
+Per Java è necessario installare la versione 13 della JDK e Maven per gestire le
+dipendenze del progetto. Le librerie necessarie saranno poi risolte da Maven.
+\subsubsection{Python}
+Per Python è necessario installare una verisone di Python compresa tra la 3.6 e
+la 3.9 per questioni di compatibilità con il modulo scikit-sparse.
+Inoltre è necessario installare i pacchetti: numpy, scipy, scikit-sparse,
+matplotlib, pandas, seaborn, memory-profiler, psutil.
+\subsubsection{Julia}
+Per Julia è necessario installare l'enviroment Julia a 64 bit e i pacchetti
+aggiuntivi: MAT, JSON, CSV, DataFrames.
+
+\subsection{Esecuzione}
+I benchmark sono regolati da uno o più file di configurazione, il file
+\texttt{config.json} contiene un template della struttura che deve rispettare:
+\begin{itemize}
+  \item \textbf{matrices\_path}: percorso della cartella che contiene le
+  matrici.
+  \item \textbf{output\_path}: percorso della cartella dove saranno salvati i
+  report dei benchmark.
+  \item \textbf{platform}: il sistema operativo utilizzato.
+  Si vuole mantenere questo campo uguale per tutti i benchmark sullo stesso
+  sistema operativo per aggregare correttamente i risultati.
+  \item \textbf{host}: nome del computer utilizzato.
+  Si vuole mantenere questo campo uguale per tutti i benchmark sullo stesso
+  computer per aggregare correttamente i risultati.
+  \item \textbf{matrices}: lista dei nomi dei file delle matrici da utilizzare
+  nei benchmark. \`E necessario che i nomi dei file comprendano anche
+  l'estensione \texttt{.mat}.
+\end{itemize}
+
+Il repository presenta quattro cartelle contenenti il codice, una per ogni
+ambiente di sviluppo. I benchmark possono essere eseguiti singolarmente,
+lanciando l'ambiente desiderato, o tutti insieme utilizzando gli script
+\texttt{run-benchmark.sh} per Linux e \texttt{run-benchmark.bat} per Windows. Si
+tenga presente che per poter eseguire correttamente questi script è necessario
+che tutti gli ambienti di cui si intende fare il benchmark siano nel PATH di
+sistema.
+
+Per utilizzare gli script è necessario avere un file \texttt{config.json} in
+ogni cartella del corrispondente linguaggio.
+Questo è necessario per poter indicare diverse liste di matrici a seconda del
+linguaggio selezionato. Infatti, per quanto alcuni controlli siano implementati,
+non è possibile garantire che un programma non sia terminato dal sistema
+operativo per eccessivo utilizzo di memoria. Separando i file di configurazione
+è quindi possibile rimuovere dalla lista di matrici quelle che causano errori
+solo in particolari ambienti di sviluppo.
+
+\subsubsection{MATLAB}
+Per eseguire i benchmark in MATLAB è necessario spostarsi nella cartella
+\texttt{matlab} e lanciare in modalità batch lo script \texttt{main.m} con
+argomento il file di configurazione. Inoltre è necessario aggiungere una
+chiamata \texttt{exit} al termine dello script in modo da terminare il processo
+MATLAB.
+\begin{lstlisting}[frame=single]
+> matlab -batch "main('<config-file>'); exit;"
+\end{lstlisting}
+
+\subsubsection{Java}
+Per eseguire i benchmark in Java è necessario anziutto generare il file 
+\texttt{.jar} del progetto nel caso non fosse già presente. Per farlo dalla 
+cartella \texttt{java} è sufficiente eseguire i seguenti comandi in Linux:
+\begin{lstlisting}[frame=single]
+> cd ./cholesky-linear-solver/
+> mvn clean compile assembly:single
+> cp ./target/cholesky-linear-solver.jar \
+  ../cholesky-linear-solver.jar
+> cd ..
+\end{lstlisting}
+
+E in Windows:
+\begin{lstlisting}[frame=single]
+> cd .\cholesky-linear-solver\
+> call mvn -B clean package assembly:single
+> copy .\target\cholesky-linear-solver.jar 
+  ..\cholesky-linear-solver.jar
+> cd ..\
+\end{lstlisting}
+
+Dopo aver generato il file è possibile eseguire i benchmark con il comando:
+\begin{lstlisting}[frame=single]
+> java -jar ./cholesky-linear-solver.jar <config-file>
+\end{lstlisting} 
+
+\subsubsection{Python}
+Per eseguire i benchmark in Python dalla cartella \texttt{python} è sufficiente
+eseguire il comando:
+\begin{lstlisting}[frame=single]
+> python ./main.py --json <config-file>
+\end{lstlisting}
+
+\subsubsection{Julia}
+Per eseguire i benchmark in Julia dalla cartella \texttt{julia} è necessario
+eseguire il comando:
+\begin{lstlisting}[frame=single]
+> julia ./main.jl <config-file>
+\end{lstlisting}
+
+\subsection{Risultati}
+In questa sezione sono riportati i risultati dei benchmark suddivisi per
+ambiente di sviluppo.
+\subsubsection{MATLAB}
+Nella Tabella~\ref{tab:result_matlab} sono riportati i risultati ottenuti
+utilizzando MATLAB.
+Si può osservare come i tempi di esecuzione e la memoria utilizzata crescano al
+crescere del numeri di elementi non nulli della matrice.\\
+Osservando i risultati dell'utilizzo della memoria si può notare come per la
+matrice \texttt{cfd2.mat} in ambiente Linux sia stata utilizzata una quantità di
+memoria irrealisticamente elevata, circa 18,4 exabyte, ovvero la massima
+quantità di memoria indirizzabile con 64bit.
+Si presume che questo sia un errore dovuto al calolo della memoria dell'ambiente
+MATLAB che produce un underflow.\\
+In Figura~\ref{fig:matlab_overflow} è riportato il comando MATLAB utilizzato
+per il calcolo della memoria utilizzata ed è possibile vedere come il valore
+restituito per la matrice \texttt{cfd2.mat} sia molto elevato mentre quello
+restituito per la matrice \texttt{cfd1.mat} sia molto più contenuto.
+Si è provato ad aumentare la memoria disponibile per l'heap di MATLAB fino agli
+8GB massimi consentiti, nonostante questo il problema persiste e non vengono
+introdotti miglioramenti sulle altre matrici
+\begin{figure}[ht]
+\includegraphics[width=\textwidth]{matlab_overflow}
+\caption{Comando MATLAB utilizzato per la profilazione della memoria}
+\label{fig:matlab_overflow}
+\end{figure}\\
+\begin{table}[ht]
+\centering
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{@{}lrrrrrcc@{}}
+\toprule
+\textbf{A} &
+\textbf{size} &
+\textbf{NNZ} &
+\textbf{time {[}s{]}} &
+\textbf{memory\_usage {[}MB{]}} &
+\textbf{relative\_error} &
+\textbf{platform} &
+\textbf{library\_version} \\ \midrule
+ex15.mat            & 6867   & 98671   & 0.05   & 4.19
+& 8.21380E-07 & Linux   & 9.14.0.2254940 (R2023a) Update 2 \\
+ex15.mat            & 6867   & 98671   & 0.06   & 4.15
+& 8.21380E-07 & WINDOWS & 9.13.0.2193358 (R2022b) Update 5 \\
+shallow\_water1.mat & 81920  & 327680  & 1.72   & 368.87
+& 3.07689E-16 & Linux   & 9.14.0.2254940 (R2023a) Update 2 \\
+shallow\_water1.mat & 81920  & 327680  & 2.09   & 368.93
+& 3.07689E-16 & WINDOWS & 9.13.0.2193358 (R2022b) Update 5 \\
+cfd1.mat            & 70656  & 1825580 & 3.86   & 1286.22
+& 6.34538E-13 & Linux   & 9.14.0.2254940 (R2023a) Update 2 \\
+cfd1.mat            & 70656  & 1825580 & 6.54   & 1302.86
+& 6.34538E-13 & WINDOWS & 9.13.0.2193358 (R2022b) Update 5 \\
+cfd2.mat            & 123440 & 3085406 & 6.55   & 18446744
+& 7.98365E-13 & Linux   & 9.14.0.2254940 (R2023a) Update 2 \\
+cfd2.mat            & 123440 & 3085406 & 13.07  & 2503.08
+& 7.98365E-13 & WINDOWS & 9.13.0.2193358 (R2022b) Update 5 \\
+apache2.mat         & 715176 & 4817870 & 646.19 & 27490.58
+& 3.65750E-11 & WINDOWS & 9.13.0.2193358 (R2022b) Update 5 \\ \bottomrule
+\end{tabular}%
+}
+\caption{Risultati dei benchmark MATLAB}
+\label{tab:result_matlab}
+\end{table}
+\subsubsection{Java}
+Osservando i risultati nella Tabella~\ref{tab:result_java} si può notare come
+l'errore relativo e la memoria utilizzata per ogni matrice siano uguali o molto
+vicini tra i due sistemi operativi, mentre il tempo di computazione sia più
+variabile seppur non discostandosi molto.\\
+Le matrici fattorizzate nei due sistemi operativi sono le stesse in quanto i
+limiti non derivano tanto dal memoria disponibile quanto dai limiti della
+libreria utilizzata. Infatti la libreria EJML utilizza interi a 32 bit con segno
+per indicizzare gli elementi della matrice e nella fattorizzazione di Cholesky
+non è quindi in grado di gestire matrici con più di $2^{31}$ elementi.
+\begin{table}[ht]
+\centering
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{@{}lrrrrrcc@{}}
+\toprule
+\textbf{A} &
+\textbf{size} &
+\textbf{NNZ} &
+\textbf{time {[}s{]}} &
+\textbf{memory\_usage {[}MB{]}} &
+\textbf{relative\_error} &
+\textbf{platform} &
+\textbf{library\_version} \\ \midrule
+ex15.mat            & 6867   & 98671   & 0.01   & 5.12
+& 8.00799E-07 & Linux   & 0.43 \\
+ex15.mat            & 6867   & 98671   & 0.01   & 5.01
+& 8.00799E-07 & WINDOWS & 0.43 \\
+shallow\_water1.mat & 81920  & 327680  & 10.42  & 290.06
+& 3.55914E-16 & Linux   & 0.43 \\
+shallow\_water1.mat & 81920  & 327680  & 8.96   & 291.21
+& 3.55914E-16 & WINDOWS & 0.43 \\
+cfd1.mat            & 70656  & 1825580 & 76.96  & 992.04
+& 4.52430E-11 & Linux   & 0.43 \\
+cfd1.mat            & 70656  & 1825580 & 119.12 & 991.02
+& 4.52430E-11 & WINDOWS & 0.43 \\
+cfd2.mat            & 123440 & 3085406 & 121.92 & 1927.05
+& 2.19321E-11 & Linux   & 0.43 \\
+cfd2.mat            & 123440 & 3085406 & 121.14 & 1928.13
+& 2.19321E-11 & WINDOWS & 0.43 \\ \bottomrule
+\end{tabular}%
+}
+\caption{Risultati dei benchmark Java}
+\label{tab:result_java}
+\end{table}
+\subsubsection{Python}
+Come mostrano i risultati nella Tabella~\ref{tab:result_python}
+\textbf{l'implementazione Windows risulta essere generalmente meno precisa
+rispetto all'implementazione Linux.}
+I tempi di calcolo oscillano a favore dell'uno o dell'altro sistema operativo a
+seconda della matrice con differenze anche significative che non permettono però
+di identificare un sistema come più veloce dell'altro.
+L'utilizzo della memoria utilizzando un sistema Windows risulta essere più
+contenuto, ma il sistema Linux ha permesso di fattorizzare anche le matrici più
+grandi, dove invece Windows termina il processo perchè tenta di allocare troppa
+memoria.
+\`E da notare che durante l'esecuzione si sono osservati dei comportamenti
+inattesi in ambiente Linux, in particolare durante l'esecuzione della
+fattorizzazione il processo lanciava diversi thread come se stesse effettuando
+una parallelizzazione fino ad arrivare a saturare tutti e 16 i core a
+disposizione, questo però non è stato osservato in ambiente Windows.
+\begin{table}[ht]
+\centering
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{@{}lrrrrrcc@{}}
+\toprule
+\textbf{A} &
+\textbf{size} &
+\textbf{NNZ} &
+\textbf{time {[}s{]}} &
+\textbf{memory\_usage {[}MB{]}} &
+\textbf{relative\_error} &
+\textbf{platform} &
+\textbf{library\_version} \\ \midrule
+ex15.mat            & 6867    & 98671     & 0.94   & 726.99
+& 3.49945E-07 & Linux   & 1.8.1  \\
+ex15.mat            & 6867    & 98671     & 0.02   & 78.57
+& 3.97177E-07 & WINDOWS & 1.10.1 \\
+shallow\_water1.mat & 81920   & 327680    & 4.00   & 726.99
+& 3.27712E-16 & Linux   & 1.8.1  \\
+shallow\_water1.mat & 81920   & 327680    & 0.69   & 84.01
+& 3.75545E-16 & WINDOWS & 1.10.1 \\
+cfd1.mat            & 70656   & 1825580   & 3.62   & 499.01
+& 1.11282E-11 & Linux   & 1.8.1  \\
+cfd1.mat            & 70656   & 1825580   & 45.51  & 105.17
+& 2.47670E-11 & WINDOWS & 1.10.1 \\
+cfd2.mat            & 123440  & 3085406   & 8.65   & 499.15
+& 1.65638E-11 & Linux   & 1.8.1  \\
+cfd2.mat            & 123440  & 3085406   & 130.17 & 121.55
+& 3.41646E-11 & WINDOWS & 1.10.1 \\
+parabolic\_fem.mat  & 525825  & 3674625   & 19.52  & 726.99
+& 1.91515E-11 & Linux   & 1.8.1  \\
+parabolic\_fem.mat  & 525825  & 3674625   & 22.07  & 144.30
+& 2.35390E-11 & WINDOWS & 1.10.1 \\
+apache2.mat         & 715176  & 4817870   & 82.83  & 551.96
+& 1.70028E-10 & Linux   & 1.8.1  \\
+apache2.mat         & 715176  & 4817870   & 270.27 & 171.90
+& 2.24076E-10 & WINDOWS & 1.10.1 \\
+G3\_circuit.mat     & 1585478 & 7660826   & 87.47  & 785.36
+& 3.34037E-11 & Linux   & 1.8.1  \\
+G3\_circuit.mat     & 1585478 & 7660826   & 328.09 & 244.55
+& 5.82245E-11 & WINDOWS & 1.10.1 \\
+StocF-1465.mat      & 1465137 & 21005389  & 376.75 & 739.66
+& 1.89743E-08 & Linux   & 1.8.1  \\
+Flan\_1565.mat      & 1564794 & 114165372 & 447.43 & 1893.95
+& 5.33502E-10 & Linux   & 1.8.1  \\ \bottomrule
+\end{tabular}%
+}
+\caption{Risultati dei benchmark Python}
+\label{tab:result_python}
+\end{table}
+
+\subsubsection{Julia}
+La Tabella~\ref{tab:result_julia} riporta i risultati ottenuti utilizzando Julia.
+Si può notare come l'utilizzo della memoria è sempre stabile tra i due sistemi
+operativi così come l'errore relativo si discosta di valori poco significativi,
+ma i tempi di calcolo sono spesso favorevoli in ambiente Windows.
+In ambiente Windows è stato inoltre possibile fattorizzare tutte le matrici.
+\begin{table}[ht]
+\centering
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{@{}lrrrrrcc@{}}
+\toprule
+\textbf{A} &
+\textbf{size} &
+\textbf{NNZ} &
+\textbf{time {[}s{]}} &
+\textbf{memory\_usage {[}MB{]}} &
+\textbf{relative\_error} &
+\textbf{platform} &
+\textbf{library\_version} \\ \midrule
+ex15.mat            & 6867    & 98671     & 0.03   & 11.48
+& 5.81497E-07 & Linux   & 1.9.0 \\
+ex15.mat            & 6867    & 98671     & 0.02   & 11.48
+& 5.81497E-07 & WINDOWS & 1.9.0 \\
+shallow\_water1.mat & 81920   & 327680    & 0.55   & 75.02
+& 2.01653E-16 & Linux   & 1.9.0 \\
+shallow\_water1.mat & 81920   & 327680    & 0.15   & 75.02
+& 2.01653E-16 & WINDOWS & 1.9.0 \\
+cfd1.mat            & 70656   & 1825580   & 1.49   & 540.85
+& 7.06626E-14 & Linux   & 1.9.0 \\
+cfd1.mat            & 70656   & 1825580   & 1.59   & 540.36
+& 6.17525E-14 & WINDOWS & 1.9.0 \\
+cfd2.mat            & 123440  & 3085406   & 2.66   & 1019.36
+& 3.07576E-13 & Linux   & 1.9.0 \\
+cfd2.mat            & 123440  & 3085406   & 2.34   & 1019.36
+& 2.74264E-13 & WINDOWS & 1.9.0 \\
+parabolic\_fem.mat  & 525825  & 3674625   & 3.40   & 771.37
+& 7.12844E-13 & Linux   & 1.9.0 \\
+parabolic\_fem.mat  & 525825  & 3674625   & 2.05   & 771.37
+& 7.10019E-13 & WINDOWS & 1.9.0 \\
+apache2.mat         & 715176  & 4817870   & 7.99   & 2346.68
+& 5.60339E-11 & Linux   & 1.9.0 \\
+apache2.mat         & 715176  & 4817870   & 6.52   & 2346.68
+& 5.60359E-11 & WINDOWS & 1.9.0 \\
+G3\_circuit.mat     & 1585478 & 7660826   & 12.46  & 3070.81
+& 4.88705E-12 & Linux   & 1.9.0 \\
+G3\_circuit.mat     & 1585478 & 7660826   & 8.60   & 3070.81
+& 4.88457E-12 & WINDOWS & 1.9.0 \\
+StocF-1465.mat      & 1465137 & 21005389  & 483.85 & 39483.77
+& 2.38859E-10 & WINDOWS & 1.9.0 \\
+Flan\_1565.mat      & 1564794 & 114165372 & 538.93 & 43646.98
+& 1.67777E-12 & WINDOWS & 1.9.0 \\ \bottomrule
+\end{tabular}%
+}
+\caption{Risultati dei benchmark Julia}
+\label{tab:result_julia}
+\end{table}
+
+\subsection{Comparazione}
+In questa sezione sono riportati i risultati dei benchmark divisi matrice per
+matrice per mettere in luce come i vari ambienti di sviluppo producano risultati
+diversi gli uni dagli altri.
+\subsubsection{ex15}
+I risultati sulla matrice ex15 mostrano MATLAB come soluzione meno dispendiosa
+di memoria ma anche come la meno precisa. Python risulta ottenere la migliore
+precisione in particolare in ambiente Linux ma occupa molta più memoria degli
+altri ambienti. Per quanto riguarda i tempi di esecuzione Java ottiene i tempi
+migliori. \`E interessante notare come i risultati di Python varino molto più
+degli altri tra sistemi Windows e Linux.
+\begin{figure}[ht]
+\includegraphics[width=\textwidth]{ex15}
+\caption{Comparazione dei risultati per la matrice ex15.}
+\label{fig:ex15}
+\end{figure}
+\subsubsection{shallow\_water1}
+Come mostrato in Figura~\ref{fig:shallow_water1} Julia ottiene i migliori
+risultati in tutte le matriche, è infatti l'ambiente più veloce e preciso
+utilizzando meno memoria di tutti gli altri linguaggi. Anche per questa matrice
+i risultati con Python sono quelli dove il cambio di sistema operativo porta la
+maggiore differenza, in particolare per quelli che sono i tempi di calcolo e
+l'uso della memoria.
+\begin{figure}[ht]
+\includegraphics[width=\textwidth]{shallow_water1}
+\caption{Comparazione dei risultati per la matrice shallow\_water1.}
+\label{fig:shallow_water1}
+\end{figure}
+\subsubsection{cfd1}
+I risultati sulla matrice cfd1 riporati in Figura~\ref{fig:cfd1} mostrano come i
+risultati più precisi siano ottenuti da Julia, restando in linea con i risultati
+ottenuti con la matrice shallow\_water1. In questo caso però la quantità di
+memoria occupata da Julia è maggiore di quella di Python, che anche nella
+versione Linux ottiene risultati migliori, pur occupando quattro volte la
+memoria che occupa nella versione Windows.
+\begin{figure}[ht]
+\includegraphics[width=\textwidth]{cfd1}
+\caption{Comparazione dei risultati per la matrice cfd1.}
+\label{fig:cfd1}
+\end{figure}
+\subsubsection{cfd2}
+I dati registrati per la matrice cfd2 riportati nella Figura~\ref{fig:cfd2} non
+si discostano da quelli delle altre matrici se non per quanto riguarda la
+memoria utilizzata da MATLAB in ambiente Linux, come già discusso è un errore
+dovuto probabilmente al calcolo della memoria da parte della libreria MATLAB.
+Risulta infatti impossibile che siano stati allocati più di $18$ exabyte di
+memoria.
+\begin{figure}[ht]
+\includegraphics[width=\textwidth]{cfd2}
+\caption{Comparazione dei risultati per la matrice cfd2.}
+\label{fig:cfd2}
+\end{figure}
+\subsubsection{parabolic\_fem}
+La Figura~\ref{fig:parabolic_fem} mostra che la matrice è stata fattorizzata
+solo negli ambienti Julia e Python su entrambi i sistemi operativi.
+In particolare i risultati ottentuti da Julia sono più precisi e prodotti più
+velocemente, ma la memoria occupata da Python è minore, specialmente su Windows.
+\begin{figure}[ht]
+\includegraphics[width=\textwidth]{parabolic_fem}
+\caption{Comparazione dei risultati per la matrice parabolic\_fem.}
+\label{fig:parabolic_fem}
+\end{figure}
+\subsubsection{apache2}
+Come mostrato in Figura~\ref{fig:apache2} la matrice apache2 è stata
+fattorizzata in Python e Julia su entrambi i sistemi operativi testati, inoltre
+la fattorizzazione è stata possibile anche in MATLAB in ambiente Windows, dove
+per altro sono stati ottenuti i risultati più precisi, ma anche i più alti
+valori di memoria occupata.
+\begin{figure}[ht]
+\includegraphics[width=\textwidth]{apache2}
+\caption{Comparazione dei risultati per la matrice apache2.}
+\label{fig:apache2}
+\end{figure}
+\subsubsection{G3\_circuit}
+Osservando i risultati in Figura~\ref{fig:G3_circuit} si può vedere che la
+matrice G3\_circuit è stata fattorizzata solo in Python e Julia, ottenendo
+risultati più precisi e veloci in Julia, ma occupando più memoria che in Python,
+che, specialmente in Windows, alloca molti meno byte, ottenendo però risultati
+meno precisi.
+\begin{figure}[ht]
+\includegraphics[width=\textwidth]{G3_circuit}
+\caption{Comparazione dei risultati per la matrice G3\_circuit.}
+\label{fig:G3_circuit}
+\end{figure}
+\subsubsection{StocF-1465}
+La matrice StocF-1465 è stata fattorizzata solo in Julia su Windows e da Python
+su Linux. Il grafico in Figura~\ref{fig:StocF-1465} mostra come l'errore
+relativo registrato da Julia sia due ordini di grandezza più piccolo di
+quello registrato in Python, ma l'impatto sulla memoria e i tempi di calcolo di
+Python sono più contenuti rispetto a quelli di Julia.
+\begin{figure}[ht]
+\includegraphics[width=\textwidth]{StocF-1465}
+\caption{Comparazione dei risultati per la matrice StocF-1465.}
+\label{fig:StocF-1465}
+\end{figure}
+\subsubsection{Flan\_1565}
+I risultati in Figura~\ref{fig:Flan_1565} mostrano risultati simili a quelli
+ottenuti con la matrice StocF-1465, ancora una volta Julia ottiene risultati più
+precisi ma occupando più spazio in memoria e impiegando più tempo per la
+fattorizzazione.
+\begin{figure}[ht]
+\includegraphics[width=\textwidth]{Flan_1565}
+\caption{Comparazione dei risultati per la matrice Flan\_1565.}
+\label{fig:Flan_1565}
+\end{figure}
+
+\section{Conclusioni}
+\`Eevidente come gli unici ambienti in cui è stato possibile
+fattorizzare tutte le matrici sono stati Python e Julia, in particolare solo in
+sistema Linux per Python e in Windows per Julia.
+\`E interessante notare che la libreria Python non ha raggiunto gli stessi
+risultati in fatto di precisione nonostante utilizzi per la fattorizzazione la
+stessa libreria, ovvero cholmod.\\
+Julia risulta essere l'ambiente dove l'errore relativo registrato è minore nella
+maggior parte dei casi.
+Per quanto riguarda la computazione Julia ha riportato i tempi più brevi in
+quasi ogni test.\\
+In generale si può notare come il caso in cui Julia ottiene risultati peggiori
+rispetto agli altri è quello con la matrice ex15, ovvero la più piccola delle
+matrici ma anche la più densa, questo potrebbe suggerire che la libreria perda
+in prestazioni all'aumentare della densità più delle altre, ma maggiori test
+sarebbero necessari per confermare questa ipotesi.\\
+In ambiente Python sono registrate le minori variazioni nella memoria occupata
+con la maggior parte delle matrici testate, trovando ancora una volta nella
+matrice ex15 l'eccezione.\\
+In conclusione Julia sembrerebbe essere l'ambiente più performante sia in
+termini di tempo di esecuzione che di precisione della soluzione e pur non
+essendo il meglio ottimizzato nell'utilizzo della memoria, risulta essere
+l'unico ambiente in cui è stato possibile fattorizzare tutte le matrici testate
+con sitema operativo Windows, mentre su Linux con Python è stato possibile
+fattorizzare tutte le matrici ma ottenendo risultati peggiori in termini di
+precisione.
+
+\end{document}
